@@ -33,9 +33,13 @@ class Outlet extends Model
         return $this->belongsTo(Brand::class, 'brand_id', 'brand_id');
     }
 
+    public function produk()
+    {
+        return $this->hasMany(Produk::class, 'outlet_id', 'outlet_id');
+    }
+
     public function financialReports()
     {
         return $this->hasMany(FinancialReport::class, 'outlet_id', 'outlet_id');
     }
-    
 }

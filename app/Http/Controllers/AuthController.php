@@ -30,12 +30,12 @@ class AuthController extends Controller
 
             if ($user->role === 'superadmin') {
                 return redirect()
-                ->route('superadmin.dashboard')
-                ->with('success', 'Berhasil masuk sebagai superadmin.');
+                    ->route('superadmin.dashboard')
+                    ->with('success', 'Berhasil masuk sebagai superadmin.');
             }
 
             if ($user->role === 'franchisor') {
-                $hasApprovedBrand = Brand::where('franchisor_id', $user->user_id)
+                $hasApprovedBrand = \App\Models\Brand::where('franchisor_id', $user->user_id)
                     ->where('status', 'approved')
                     ->exists();
 
@@ -47,20 +47,19 @@ class AuthController extends Controller
 
                 return redirect()
                     ->route('brand.registration.create')
-                    ->with('success', 'Silakan daftarkan brand Anda terlebih dahulu.');
+                    ->with('success', 'Brand Anda belum diverifikasi. Silakan lengkapi pendaftaran brand.');
             }
 
-            if ($user->role === 'superadmin') {
+            if ($user->role === 'franchise') {
                 return redirect()
-                    ->route('superadmin.brand.verification')
-                    ->with('success', 'Berhasil masuk sebagai superadmin.');
+                    ->route('franchisee.dashboard')
+                    ->with('success', 'Berhasil masuk sebagai franchisee.');
             }
 
             return redirect()
                 ->route('home')
-                ->with('success', 'Berhasil masuk ke akun.');
+                ->with('success', 'Berhasil masuk.');
         }
-
         return back()
             ->withErrors([
                 'email' => 'Email atau password salah.',

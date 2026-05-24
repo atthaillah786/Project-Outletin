@@ -28,29 +28,26 @@ class FranchisorDashboardController extends Controller
                 ->with('success', 'Brand Anda belum diverifikasi oleh superadmin.');
         }
 
-        $brandIds = Brand::where('franchisor_id', $user->user_id)
-            ->where('status', 'approved')
-            ->pluck('brand_id');
-
         $brands = Brand::where('franchisor_id', $user->user_id)
             ->where('status', 'approved')
             ->orderBy('brand_name')
             ->get();
 
-        $outlets = Outlet::with(['brand', 'franchise'])
+        $brandIds = $brands->pluck('brand_id');
+
+        $applications = Outlet::with(['brand', 'franchise'])
             ->whereIn('brand_id', $brandIds)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('outlet_id', 'desc')
             ->get();
 
-        $pendingApplications = FranchiseBrand::with(['franchise', 'brand'])
-            ->whereIn('brand_id', $brandIds)
-            ->where('status', 'pending')
-            ->orderBy('franchise_brands_id', 'desc')
-            ->get();
+        $pendingApplications = $applications->where('status', 'pending')->values();
+
+        $outlets = $applications->where('status', 'approved')->values();
 
         $financialReports = FinancialReport::query()
             ->join('outlets', 'financial_reports.outlet_id', '=', 'outlets.outlet_id')
             ->whereIn('outlets.brand_id', $brandIds)
+            ->where('outlets.status', 'approved')
             ->selectRaw("DATE_FORMAT(financial_reports.report_date, '%Y-%m') as month")
             ->selectRaw("SUM(financial_reports.total_income) as total_income")
             ->selectRaw("SUM(financial_reports.total_expense) as total_expense")
@@ -58,21 +55,33 @@ class FranchisorDashboardController extends Controller
             ->orderBy('month')
             ->get();
 
-        $chartLabels = $financialReports->pluck('month');
-        $incomeData = $financialReports->pluck('total_income');
-        $expenseData = $financialReports->pluck('total_expense');
+        $chartLabels = $financialReports->pluck('month')->values()->toArray();
 
-        $profitData = $financialReports->map(function ($report) {
-            return (float) $report->total_income - (float) $report->total_expense;
-        });
+        $incomeData = $financialReports
+            ->pluck('total_income')
+            ->map(fn ($value) => (float) $value)
+            ->values()
+            ->toArray();
 
-        $totalIncome = $financialReports->sum('total_income');
-        $totalExpense = $financialReports->sum('total_expense');
+        $expenseData = $financialReports
+            ->pluck('total_expense')
+            ->map(fn ($value) => (float) $value)
+            ->values()
+            ->toArray();
+
+        $profitData = $financialReports
+            ->map(fn ($report) => (float) $report->total_income - (float) $report->total_expense)
+            ->values()
+            ->toArray();
+
+        $totalIncome = array_sum($incomeData);
+        $totalExpense = array_sum($expenseData);
         $totalProfit = $totalIncome - $totalExpense;
 
         return view('dashboard.franchisor', compact(
             'brands',
             'outlets',
+            'applications',
             'pendingApplications',
             'chartLabels',
             'incomeData',
@@ -96,17 +105,33 @@ class FranchisorDashboardController extends Controller
             ->where('status', 'approved')
             ->pluck('brand_id');
 
-        $application = FranchiseBrand::where('franchise_brands_id', $id)
+        $outlet = Outlet::where('outlet_id', $id)
             ->whereIn('brand_id', $brandIds)
             ->firstOrFail();
 
-        $application->update([
+        $outlet->update([
             'status' => 'approved',
         ]);
 
+        $franchiseBrand = FranchiseBrand::where('franchise_id', $outlet->franchise_id)
+            ->where('brand_id', $outlet->brand_id)
+            ->first();
+
+        if ($franchiseBrand) {
+            $franchiseBrand->update([
+                'status' => 'approved',
+            ]);
+        } else {
+            FranchiseBrand::create([
+                'franchise_id' => $outlet->franchise_id,
+                'brand_id' => $outlet->brand_id,
+                'status' => 'approved',
+            ]);
+        }
+
         return redirect()
             ->route('franchisor.dashboard')
-            ->with('success', 'Pengajuan franchise berhasil diterima.');
+            ->with('success', 'Pengajuan outlet berhasil diterima.');
     }
 
     public function rejectApplication($id)
@@ -121,16 +146,26 @@ class FranchisorDashboardController extends Controller
             ->where('status', 'approved')
             ->pluck('brand_id');
 
-        $application = FranchiseBrand::where('franchise_brands_id', $id)
+        $outlet = Outlet::where('outlet_id', $id)
             ->whereIn('brand_id', $brandIds)
             ->firstOrFail();
 
-        $application->update([
+        $outlet->update([
             'status' => 'rejected',
         ]);
 
+        $franchiseBrand = FranchiseBrand::where('franchise_id', $outlet->franchise_id)
+            ->where('brand_id', $outlet->brand_id)
+            ->first();
+
+        if ($franchiseBrand) {
+            $franchiseBrand->update([
+                'status' => 'rejected',
+            ]);
+        }
+
         return redirect()
             ->route('franchisor.dashboard')
-            ->with('success', 'Pengajuan franchise berhasil ditolak.');
+            ->with('success', 'Pengajuan outlet berhasil ditolak.');
     }
 }

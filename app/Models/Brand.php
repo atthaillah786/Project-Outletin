@@ -36,9 +36,13 @@ class Brand extends Model
         return $this->belongsTo(User::class, 'franchisor_id', 'user_id');
     }
 
-    public function verifier()
+    public function outlets()
     {
-        return $this->belongsTo(User::class, 'verified_by', 'user_id');
+        return $this->hasMany(Outlet::class, 'brand_id', 'brand_id');
     }
-    
+
+    public function produk()
+{
+    return $this->hasMany(Produk::class, 'brand_id', 'brand_id');
+}
 }
