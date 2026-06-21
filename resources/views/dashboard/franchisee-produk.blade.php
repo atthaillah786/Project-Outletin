@@ -3,16 +3,17 @@
 @section('title', 'Produk Brand - Outletin')
 
 @section('content')
-<section class="mb-6">
-    <h1 class="text-3xl font-bold">Data Produk Brand</h1>
-    <p class="text-gray-600">
+<section class="mb-6" data-reveal>
+    <p class="mb-2 text-sm font-extrabold uppercase tracking-normal text-oxblood">Connected catalog</p>
+    <h1 class="text-3xl font-extrabold text-ink">Data Produk Brand</h1>
+    <p class="premium-muted">
         Produk yang tersedia dari brand yang sudah terhubung dengan outlet Anda.
     </p>
 </section>
 
-<section class="bg-white border rounded-2xl p-6 shadow-sm">
+<section class="premium-card p-6" data-reveal>
     <div class="overflow-x-auto">
-        <table class="w-full text-left">
+        <table class="premium-table">
             <thead>
                 <tr class="border-b text-sm text-gray-500">
                     <th class="py-3 pr-4">ID</th>

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -6,6 +7,107 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-ivory: #f8f8f7;
+    --color-linen: #cbc0b2;
+    --color-oxblood: #550b14;
+    --color-taupe: #7e6961;
+    --color-ink: #201717;
+    --color-mist: #efeae4;
+    --shadow-premium: 0 18px 55px rgb(85 11 20 / 0.12);
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background:
+            radial-gradient(circle at top left, rgb(203 192 178 / 0.34), transparent 28rem),
+            linear-gradient(135deg, #f8f8f7 0%, #efeae4 50%, #f8f8f7 100%);
+        color: #201717;
+        letter-spacing: 0;
+    }
+
+    ::selection {
+        background: rgb(85 11 20 / 0.18);
+        color: #550b14;
+    }
+}
+
+@layer components {
+    .premium-shell {
+        @apply bg-ivory text-ink antialiased;
+    }
+
+    .premium-nav {
+        @apply sticky top-3 z-50 mx-auto w-[calc(100%-1rem)] max-w-7xl rounded-2xl border border-white/60 bg-ivory/78 text-ink shadow-[0_18px_55px_rgb(85,11,20,0.10)] backdrop-blur-xl transition-all duration-300 ease-in-out;
+    }
+
+    .premium-nav.is-scrolled {
+        @apply top-2 bg-ivory/90 shadow-[0_14px_45px_rgb(85,11,20,0.16)];
+    }
+
+    .premium-card {
+        @apply rounded-3xl border border-white/70 bg-white/76 shadow-[0_18px_55px_rgb(85,11,20,0.10)] backdrop-blur-sm transition-all duration-300 ease-in-out;
+    }
+
+    .premium-card-hover {
+        @apply hover:-translate-y-1 hover:border-linen/80 hover:shadow-[0_24px_70px_rgb(85,11,20,0.16)];
+    }
+
+    .premium-button {
+        @apply inline-flex items-center justify-center rounded-full bg-gradient-to-r from-oxblood to-taupe px-5 py-3 text-sm font-bold text-white shadow-[0_14px_34px_rgb(85,11,20,0.26)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_18px_44px_rgb(85,11,20,0.36)] focus:outline-none focus:ring-4 focus:ring-oxblood/20;
+    }
+
+    .premium-button-soft {
+        @apply inline-flex items-center justify-center rounded-full border border-linen/70 bg-white/70 px-5 py-3 text-sm font-bold text-oxblood shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_14px_34px_rgb(126,105,97,0.16)] focus:outline-none focus:ring-4 focus:ring-linen/40;
+    }
+
+    .premium-input {
+        @apply w-full rounded-2xl border border-linen/70 bg-white/80 px-4 py-3 text-ink shadow-sm transition-all duration-300 ease-in-out placeholder:text-taupe/60 focus:border-oxblood focus:outline-none focus:ring-4 focus:ring-oxblood/10;
+    }
+
+    .premium-section-title {
+        @apply text-3xl font-extrabold tracking-normal text-ink md:text-5xl;
+    }
+
+    .premium-muted {
+        @apply text-taupe leading-8;
+    }
+
+    .premium-table {
+        @apply w-full text-left text-sm;
+    }
+
+    .premium-table thead tr {
+        @apply border-b border-linen/60 text-xs font-bold uppercase tracking-normal text-taupe;
+    }
+
+    .premium-table tbody tr {
+        @apply border-b border-linen/40 transition-colors duration-200 hover:bg-mist/45;
+    }
+
+    .premium-badge {
+        @apply inline-flex rounded-full px-3 py-1 text-xs font-bold;
+    }
+}
+
+@layer utilities {
+    .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 600ms ease, transform 600ms ease;
+    }
+
+    .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .premium-glow {
+        box-shadow: 0 0 0 1px rgb(255 255 255 / 0.42), 0 24px 80px rgb(85 11 20 / 0.16);
+    }
 }

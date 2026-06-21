@@ -1,100 +1,69 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Superadmin - Outletin</title>
+@extends('layouts.dashboard')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+@section('title', 'Dashboard Superadmin - Outletin')
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+@section('content')
 
-<body class="bg-gray-50 min-h-screen">
-
-<nav class="bg-red-800 text-white sticky top-0 z-50 shadow-md">
-    <div class="container mx-auto flex items-center justify-between px-4 py-4">
-        <a href="{{ route('home') }}" class="text-xl font-bold">
-            Outletin
-        </a>
-
-        <div class="flex items-center gap-4">
-            <span class="hidden md:inline text-sm text-red-100">
-                {{ auth()->user()->name }}
-            </span>
-
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button
-                    type="submit"
-                    class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition"
-                >
-                    Keluar
-                </button>
-            </form>
-        </div>
-    </div>
-</nav>
-
-<main class="container mx-auto px-4 py-10">
-
-    <section class="mb-10">
-        <h1 class="text-4xl md:text-5xl font-bold text-black mb-3">
+    <section class="mb-10" data-reveal>
+        <p class="mb-3 text-sm font-extrabold uppercase tracking-normal text-oxblood">
+            Executive overview
+        </p>
+        <h1 class="premium-section-title mb-3">
             Dashboard Superadmin
         </h1>
 
-        <p class="text-gray-600 text-base md:text-lg">
+        <p class="premium-muted text-base md:text-lg">
             Kelola verifikasi brand, pantau user, outlet, pengajuan franchise, dan performa keuangan sistem.
         </p>
     </section>
 
     @if (session('success'))
-        <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-xl mb-8">
+        <div class="rounded-2xl border border-emerald-200 bg-emerald-50/90 px-5 py-4 text-sm font-semibold text-emerald-800 shadow-sm mb-8">
             {{ session('success') }}
         </div>
     @endif
 
     <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p class="text-gray-500 text-sm mb-2">Total User</p>
-            <h2 class="text-3xl font-bold text-black">{{ $totalUsers }}</h2>
+        <div class="premium-card premium-card-hover p-6" data-reveal>
+            <p class="text-taupe text-sm font-bold mb-2">Total User</p>
+            <h2 class="text-3xl font-extrabold text-ink">{{ $totalUsers }}</h2>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p class="text-gray-500 text-sm mb-2">Total Brand</p>
-            <h2 class="text-3xl font-bold text-black">{{ $totalBrands }}</h2>
+        <div class="premium-card premium-card-hover p-6" data-reveal>
+            <p class="text-taupe text-sm font-bold mb-2">Total Brand</p>
+            <h2 class="text-3xl font-extrabold text-ink">{{ $totalBrands }}</h2>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p class="text-gray-500 text-sm mb-2">Total Outlet</p>
-            <h2 class="text-3xl font-bold text-black">{{ $totalOutlets }}</h2>
+        <div class="premium-card premium-card-hover p-6" data-reveal>
+            <p class="text-taupe text-sm font-bold mb-2">Total Outlet</p>
+            <h2 class="text-3xl font-extrabold text-ink">{{ $totalOutlets }}</h2>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p class="text-gray-500 text-sm mb-2">Brand Pending</p>
-            <h2 class="text-3xl font-bold text-black">{{ $pendingBrands }}</h2>
+        <div class="premium-card premium-card-hover p-6" data-reveal>
+            <p class="text-taupe text-sm font-bold mb-2">Brand Pending</p>
+            <h2 class="text-3xl font-extrabold text-ink">{{ $pendingBrands }}</h2>
         </div>
     </section>
 
     <section class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-10">
-        <div class="xl:col-span-2 bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm">
-            <h2 class="text-2xl font-bold text-black mb-2">
+        <div class="xl:col-span-2 premium-card p-6 md:p-8" data-reveal>
+            <h2 class="text-2xl font-extrabold text-ink mb-2">
                 Grafik Status Brand
             </h2>
 
-            <p class="text-gray-600 mb-6">
+            <p class="premium-muted mb-6">
                 Perbandingan brand pending, approved, dan rejected.
             </p>
 
             <canvas id="brandStatusChart" height="120"></canvas>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm">
-            <h2 class="text-2xl font-bold text-black mb-2">
+        <div class="premium-card p-6 md:p-8" data-reveal>
+            <h2 class="text-2xl font-extrabold text-ink mb-2">
                 Role User
             </h2>
 
-            <p class="text-gray-600 mb-6">
+            <p class="premium-muted mb-6">
                 Distribusi user berdasarkan role.
             </p>
 
@@ -103,42 +72,42 @@
     </section>
 
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p class="text-gray-500 text-sm mb-2">Total Income</p>
-            <h2 class="text-2xl font-bold text-black">
+        <div class="premium-card premium-card-hover p-6" data-reveal>
+            <p class="text-taupe text-sm font-bold mb-2">Total Income</p>
+            <h2 class="text-2xl font-extrabold text-ink">
                 Rp {{ number_format($totalIncome, 0, ',', '.') }}
             </h2>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p class="text-gray-500 text-sm mb-2">Total Expense</p>
-            <h2 class="text-2xl font-bold text-black">
+        <div class="premium-card premium-card-hover p-6" data-reveal>
+            <p class="text-taupe text-sm font-bold mb-2">Total Expense</p>
+            <h2 class="text-2xl font-extrabold text-ink">
                 Rp {{ number_format($totalExpense, 0, ',', '.') }}
             </h2>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p class="text-gray-500 text-sm mb-2">Total Profit</p>
-            <h2 class="text-2xl font-bold text-black">
+        <div class="premium-card premium-card-hover p-6" data-reveal>
+            <p class="text-taupe text-sm font-bold mb-2">Total Profit</p>
+            <h2 class="text-2xl font-extrabold text-ink">
                 Rp {{ number_format($totalProfit, 0, ',', '.') }}
             </h2>
         </div>
     </section>
 
-    <section class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm mb-10">
+    <section class="premium-card p-6 md:p-8 mb-10" data-reveal>
         <div class="mb-6">
-            <h2 class="text-2xl font-bold text-black">
+            <h2 class="text-2xl font-extrabold text-ink">
                 Verifikasi Brand
             </h2>
 
-            <p class="text-gray-600">
+            <p class="premium-muted">
                 Brand yang baru didaftarkan oleh pemilik brand dan menunggu persetujuan superadmin.
             </p>
         </div>
 
         <div class="space-y-5">
             @forelse ($brandsNeedVerification as $brand)
-                <div class="border border-gray-200 rounded-2xl p-5">
+                <div class="rounded-3xl border border-linen/60 bg-white/70 p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgb(85,11,20,0.10)]">
                     <div class="grid grid-cols-1 lg:grid-cols-5 gap-5 items-start">
 
                         <div class="lg:col-span-1">
@@ -149,7 +118,7 @@
                                     class="w-24 h-24 rounded-2xl object-cover border"
                                 >
                             @else
-                                <div class="w-24 h-24 rounded-2xl bg-black flex items-center justify-center">
+                                <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-oxblood to-taupe flex items-center justify-center shadow-[0_16px_36px_rgb(85,11,20,0.18)]">
                                     <span class="text-white text-3xl font-bold">
                                         {{ strtoupper(substr($brand->brand_name, 0, 1)) }}
                                     </span>
@@ -158,19 +127,19 @@
                         </div>
 
                         <div class="lg:col-span-2">
-                            <h3 class="text-xl font-bold text-black">
+                            <h3 class="text-xl font-extrabold text-ink">
                                 {{ $brand->brand_name }}
                             </h3>
 
-                            <p class="text-gray-600 text-sm mt-1">
+                            <p class="text-taupe text-sm mt-1">
                                 Pemilik: {{ $brand->franchisor->name ?? '-' }}
                             </p>
 
-                            <p class="text-gray-600 text-sm">
+                            <p class="text-taupe text-sm">
                                 Email: {{ $brand->franchisor->email ?? '-' }}
                             </p>
 
-                            <p class="text-gray-700 mt-3 leading-7">
+                            <p class="text-taupe mt-3 leading-7">
                                 {{ $brand->description ?? 'Belum ada deskripsi.' }}
                             </p>
                         </div>
@@ -182,7 +151,7 @@
 
                                     <button
                                         type="submit"
-                                        class="w-full bg-green-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-green-700 transition"
+                                        class="w-full rounded-full bg-emerald-600 px-4 py-3 font-bold text-white shadow-[0_14px_34px_rgb(5,150,105,0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-700"
                                     >
                                         Setujui Brand
                                     </button>
@@ -195,12 +164,12 @@
                                         name="rejection_note"
                                         rows="3"
                                         placeholder="Catatan penolakan, opsional"
-                                        class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
+                                        class="premium-input"
                                     ></textarea>
 
                                     <button
                                         type="submit"
-                                        class="w-full mt-3 bg-red-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-red-700 transition"
+                                        class="premium-button w-full mt-3"
                                     >
                                         Tolak Brand
                                     </button>
@@ -222,13 +191,13 @@
 
     <section class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm">
-            <h2 class="text-2xl font-bold text-black mb-6">
+        <div class="premium-card p-6 md:p-8" data-reveal>
+            <h2 class="text-2xl font-extrabold text-ink mb-6">
                 Brand Terbaru
             </h2>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-left">
+                <table class="premium-table">
                     <thead>
                         <tr class="border-b border-gray-200 text-gray-600 text-sm">
                             <th class="py-3 pr-4">Brand</th>
@@ -276,13 +245,13 @@
             </div>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm">
-            <h2 class="text-2xl font-bold text-black mb-6">
+        <div class="premium-card p-6 md:p-8" data-reveal>
+            <h2 class="text-2xl font-extrabold text-ink mb-6">
                 Pengajuan Franchise Terbaru
             </h2>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-left">
+                <table class="premium-table">
                     <thead>
                         <tr class="border-b border-gray-200 text-gray-600 text-sm">
                             <th class="py-3 pr-4">Franchise</th>
@@ -332,13 +301,13 @@
 
     </section>
 
-    <section class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm">
-        <h2 class="text-2xl font-bold text-black mb-6">
+    <section class="premium-card p-6 md:p-8" data-reveal>
+        <h2 class="text-2xl font-extrabold text-ink mb-6">
             Outlet Terbaru
         </h2>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left">
+            <table class="premium-table">
                 <thead>
                     <tr class="border-b border-gray-200 text-gray-600 text-sm">
                         <th class="py-3 pr-4">Outlet</th>
@@ -398,7 +367,13 @@
 
 </main>
 
+@endsection
+
+@push('scripts')
 <script>
+    Chart.defaults.color = '#7e6961';
+    Chart.defaults.borderColor = 'rgba(203, 192, 178, 0.55)';
+
     const brandStatusLabels = ['Pending', 'Approved', 'Rejected'];
     const brandStatusData = @json(array_values($brandStatusCounts));
 
@@ -410,7 +385,9 @@
                 {
                     label: 'Jumlah Brand',
                     data: brandStatusData,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: ['#cbc0b2', '#7e6961', '#550b14'],
+                    borderRadius: 14
                 }
             ]
         },
@@ -443,7 +420,9 @@
                 {
                     label: 'Jumlah User',
                     data: userRoleData,
-                    borderWidth: 1
+                    borderWidth: 2,
+                    backgroundColor: ['#550b14', '#7e6961', '#cbc0b2', '#201717'],
+                    borderColor: '#f8f8f7'
                 }
             ]
         },
@@ -457,6 +436,4 @@
         }
     });
 </script>
-
-</body>
-</html>
+@endpush

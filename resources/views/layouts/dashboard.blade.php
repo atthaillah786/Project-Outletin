@@ -10,67 +10,67 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="bg-gray-50 min-h-screen text-gray-900">
+<body class="premium-shell min-h-screen">
 
-<nav class="bg-red-800 text-white sticky top-0 z-50 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+<nav class="premium-nav mt-3" data-shrink-navbar>
+    <div class="px-4 py-3 md:px-6 flex items-center justify-between">
 
         <div class="flex items-center gap-8">
-            <a href="{{ route('home') }}" class="text-2xl font-bold tracking-tight">
+            <a href="{{ route('home') }}" class="text-2xl font-extrabold tracking-normal text-oxblood">
                 Outletin
             </a>
 
             @auth
-                <div class="hidden md:flex items-center gap-5 text-sm font-medium">
+                <div class="hidden md:flex items-center gap-2 rounded-full border border-linen/60 bg-white/55 px-2 py-1 text-sm font-semibold text-taupe shadow-sm">
 
                     @if (auth()->user()->role === 'superadmin')
-                        <a href="{{ route('superadmin.dashboard') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('superadmin.dashboard') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Dashboard
                         </a>
 
-                        <a href="{{ route('superadmin.brand.verification') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('superadmin.brand.verification') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Verifikasi Brand
                         </a>
 
-                        <a href="{{ route('manage.brands.index') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('manage.brands.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Brand
                         </a>
 
-                        <a href="{{ route('manage.outlets.index') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('manage.outlets.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Outlet
                         </a>
                     @endif
 
 
                     @if (auth()->user()->role === 'franchisor')
-                        <a href="{{ route('franchisor.dashboard') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('franchisor.dashboard') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Dashboard
                         </a>
 
-                        <a href="{{ route('manage.brands.index') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('manage.brands.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Brand Saya
                         </a>
 
-                        <a href="{{ route('manage.outlets.index') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('manage.outlets.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Outlet
                         </a>
 
-                        <a href="{{ route('manage.produk.index') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('manage.produk.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Produk
                         </a>
                     @endif
 
 
                     @if (auth()->user()->role === 'franchise')
-                        <a href="{{ route('franchisee.dashboard') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('franchisee.dashboard') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Dashboard
                         </a>
 
-                        <a href="{{ route('manage.outlets.index') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('manage.outlets.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Outlet Saya
                         </a>
 
-                        <a href="{{ route('franchisee.produk.index') }}" class="hover:text-red-200 transition">
+                        <a href="{{ route('franchisee.produk.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Produk Brand
                         </a>
                     @endif
@@ -87,7 +87,7 @@
                         {{ auth()->user()->name }}
                     </p>
 
-                    <p class="text-xs text-red-100">
+                    <p class="text-xs text-taupe">
                         {{ ucfirst(auth()->user()->role) }}
                     </p>
                 </div>
@@ -97,13 +97,13 @@
 
                     <button
                         type="submit"
-                        class="bg-red-600 px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition"
+                        class="premium-button px-4 py-2"
                     >
                         Keluar
                     </button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="bg-white text-red-800 px-4 py-2 rounded-lg font-semibold hover:bg-red-100 transition">
+                <a href="{{ route('login') }}" class="premium-button px-4 py-2">
                     Masuk
                 </a>
             @endauth
@@ -112,57 +112,57 @@
 
 
     @auth
-        <div class="md:hidden border-t border-red-700">
-            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap gap-3 text-sm">
+        <div class="md:hidden border-t border-linen/60">
+            <div class="px-4 py-3 flex flex-wrap gap-3 text-sm">
 
                 @if (auth()->user()->role === 'superadmin')
-                    <a href="{{ route('superadmin.dashboard') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('superadmin.dashboard') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Dashboard
                     </a>
 
-                    <a href="{{ route('superadmin.brand.verification') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('superadmin.brand.verification') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Verifikasi Brand
                     </a>
 
-                    <a href="{{ route('manage.brands.index') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('manage.brands.index') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Brand
                     </a>
 
-                    <a href="{{ route('manage.outlets.index') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('manage.outlets.index') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Outlet
                     </a>
                 @endif
 
 
                 @if (auth()->user()->role === 'franchisor')
-                    <a href="{{ route('franchisor.dashboard') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('franchisor.dashboard') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Dashboard
                     </a>
 
-                    <a href="{{ route('manage.brands.index') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('manage.brands.index') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Brand Saya
                     </a>
 
-                    <a href="{{ route('manage.outlets.index') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('manage.outlets.index') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Outlet
                     </a>
 
-                    <a href="{{ route('manage.produk.index') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('manage.produk.index') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Produk
                     </a>
                 @endif
 
 
                 @if (auth()->user()->role === 'franchise')
-                    <a href="{{ route('franchisee.dashboard') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('franchisee.dashboard') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Dashboard
                     </a>
 
-                    <a href="{{ route('manage.outlets.index') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('manage.outlets.index') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Outlet Saya
                     </a>
 
-                    <a href="{{ route('franchisee.produk.index') }}" class="bg-red-700 px-3 py-2 rounded-lg">
+                    <a href="{{ route('franchisee.produk.index') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Produk Brand
                     </a>
                 @endif
@@ -173,22 +173,22 @@
 </nav>
 
 
-<main class="max-w-7xl mx-auto px-4 py-8">
+<main class="max-w-7xl mx-auto px-4 py-10 md:py-12">
 
     @if (session('success'))
-        <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-xl mb-6">
+        <div class="rounded-2xl border border-emerald-200 bg-emerald-50/90 px-5 py-4 text-sm font-semibold text-emerald-800 shadow-sm mb-6">
             {{ session('success') }}
         </div>
     @endif
 
     @if (session('error'))
-        <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 rounded-xl mb-6">
+        <div class="rounded-2xl border border-red-200 bg-red-50/90 px-5 py-4 text-sm font-semibold text-red-800 shadow-sm mb-6">
             {{ session('error') }}
         </div>
     @endif
 
     @if ($errors->any())
-        <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 rounded-xl mb-6">
+        <div class="rounded-2xl border border-red-200 bg-red-50/90 px-5 py-4 text-sm font-semibold text-red-800 shadow-sm mb-6">
             <ul class="list-disc list-inside text-sm">
                 @foreach ($errors->all() as $error)
                     <li>
@@ -204,8 +204,8 @@
 </main>
 
 
-<footer class="border-t bg-white mt-10">
-    <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-gray-500 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+<footer class="border-t border-linen/50 bg-white/45 mt-10">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-taupe flex flex-col md:flex-row md:items-center md:justify-between gap-2">
         <p>
             © {{ date('Y') }} Outletin. All rights reserved.
         </p>

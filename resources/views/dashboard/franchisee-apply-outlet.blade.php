@@ -4,18 +4,21 @@
 
 @section('content')
 <section class="max-w-3xl mx-auto">
-    <div class="bg-white border rounded-2xl p-6 shadow-sm">
-        <h1 class="text-3xl font-bold text-black mb-2">
+    <div class="premium-card p-6 md:p-8" data-reveal>
+        <p class="mb-2 text-sm font-extrabold uppercase tracking-normal text-oxblood">
+            Outlet application
+        </p>
+        <h1 class="text-3xl font-extrabold text-ink mb-2">
             Ajukan Outlet
         </h1>
 
-        <p class="text-gray-600 mb-6">
+        <p class="premium-muted mb-6">
             Lengkapi data outlet untuk mengajukan kerja sama dengan brand
             <span class="font-semibold text-black">{{ $brand->brand_name }}</span>.
         </p>
 
         @if ($errors->any())
-            <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 rounded-xl mb-6">
+            <div class="rounded-2xl border border-red-200 bg-red-50/90 px-4 py-3 text-red-800 shadow-sm mb-6">
                 <ul class="list-disc list-inside text-sm">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -28,7 +31,7 @@
             @csrf
 
             <div>
-                <label for="outlet_name" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="outlet_name" class="block text-sm font-bold text-ink mb-2">
                     Nama Outlet
                 </label>
 
@@ -38,13 +41,13 @@
                     name="outlet_name"
                     value="{{ old('outlet_name') }}"
                     placeholder="Contoh: Outlet Mixue Panam"
-                    class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-600"
+                    class="premium-input"
                     required
                 >
             </div>
 
             <div>
-                <label for="address" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="address" class="block text-sm font-bold text-ink mb-2">
                     Alamat Outlet
                 </label>
 
@@ -53,21 +56,21 @@
                     name="address"
                     rows="5"
                     placeholder="Masukkan alamat outlet"
-                    class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-600"
+                    class="premium-input"
                 >{{ old('address') }}</textarea>
             </div>
 
             <div class="flex gap-3">
                 <a
                     href="{{ route('franchisee.dashboard') }}"
-                    class="w-full text-center bg-gray-200 text-gray-800 py-3 rounded-xl font-semibold hover:bg-gray-300 transition"
+                    class="premium-button-soft w-full"
                 >
                     Batal
                 </a>
 
                 <button
                     type="submit"
-                    class="w-full bg-red-700 text-white py-3 rounded-xl font-semibold hover:bg-red-800 transition"
+                    class="premium-button w-full"
                 >
                     Kirim Pengajuan
                 </button>

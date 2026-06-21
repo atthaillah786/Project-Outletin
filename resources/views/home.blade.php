@@ -1,267 +1,148 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Outletin - Home</title>
+@extends('layouts.auth')
 
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
+@section('title', 'Home - Outletin')
 
-<body class="bg-gray-50">
+@section('content')
+<header class="mx-auto -mt-20 max-w-[1440px] px-3 pt-24 md:px-6">
+    <section
+        class="relative min-h-[760px] overflow-hidden rounded-[2rem] bg-cover bg-center premium-glow"
+        style="background-image: url('{{ asset('images/home.jpg') }}')"
+    >
+        <div class="absolute inset-0 bg-gradient-to-br from-ink/78 via-oxblood/62 to-taupe/48"></div>
+        <div class="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-ivory to-transparent"></div>
 
-<!-- Navbar -->
-<nav class="bg-red-800 text-white sticky top-0 z-50">
-  <div class="container mx-auto relative flex items-center justify-between p-4">
+        <div class="relative z-10 flex min-h-[760px] items-end px-5 pb-10 pt-28 md:px-12 lg:px-16">
+            <div class="grid w-full items-end gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+                <div data-reveal>
+                    <span class="mb-5 inline-flex rounded-full border border-white/25 bg-white/15 px-4 py-2 text-xs font-bold uppercase tracking-normal text-ivory backdrop-blur-md">
+                        Franchise command center
+                    </span>
 
-    <div class="text-xl font-bold ml-16">
-      Outletin
-    </div>
+                    <h1 class="max-w-4xl text-5xl font-extrabold leading-[1.04] text-white md:text-7xl">
+                        Outletin
+                    </h1>
 
-    <!-- Menu Tengah -->
-    <ul class="absolute left-1/2 -translate-x-1/2 flex space-x-6">
-      <li>
-        <a href="{{ url('/') }}" class="text-red-300 font-semibold">
-          Home
-        </a>
-      </li>
-      <li>
-        <a href="{{ url('/outlet') }}" class="hover:text-red-300">
-          Outlet
-        </a>
-      </li>
-      <li>
-        <a href="{{ url('/about') }}" class="hover:text-red-300">
-          About Us
-        </a>
-      </li>
-    </ul>
+                    <p class="mt-6 max-w-2xl text-base leading-8 text-ivory/88 md:text-lg">
+                        Platform manajemen waralaba untuk pemilik brand dan mitra outlet yang ingin memantau operasional, peluang ekspansi, dan performa bisnis dalam satu pengalaman yang rapi.
+                    </p>
 
-    <!-- Menu Kanan -->
-    <ul class="flex space-x-4">
-      <li>
-        <a href="{{ url('/login') }}" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">
-          Masuk
-        </a>
-      </li>
-    </ul>
+                    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                        <a href="{{ url('/login') }}" class="premium-button">
+                            Coba Sekarang
+                        </a>
+                        <a href="{{ url('/outlet') }}" class="premium-button-soft bg-white/20 text-white hover:text-oxblood">
+                            Telusuri Brand
+                        </a>
+                    </div>
+                </div>
 
-  </div>
-</nav>
-
-<!-- Hero -->
-<header
-  class="bg-cover bg-center text-white text-center py-20"
-  style="background-image: url('{{ asset('images/home.jpg') }}')"
->
-  <div class="bg-black/50 py-32 px-4">
-    <h1 class="text-4xl font-bold mb-4">
-      Selamat Datang di Outletin
-    </h1>
-
-    <p class="text-lg mb-6">
-      Sistem manajemen waralaba terbaik dan modern untuk bisnis Anda.
-    </p>
-
-    <a href="{{ url('/login') }}" class="bg-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition">
-      Coba Sekarang
-    </a>
-  </div>
+                <div class="premium-card bg-white/18 p-5 text-white backdrop-blur-xl" data-reveal>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="rounded-2xl bg-ivory p-4 text-ink">
+                            <p class="text-xs font-bold text-taupe">Outlet</p>
+                            <p class="mt-2 text-2xl font-extrabold">Multi</p>
+                        </div>
+                        <div class="rounded-2xl bg-linen p-4 text-ink">
+                            <p class="text-xs font-bold text-taupe">Brand</p>
+                            <p class="mt-2 text-2xl font-extrabold">Live</p>
+                        </div>
+                        <div class="rounded-2xl bg-oxblood p-4 text-white">
+                            <p class="text-xs font-bold text-white/70">Report</p>
+                            <p class="mt-2 text-2xl font-extrabold">Smart</p>
+                        </div>
+                    </div>
+                    <img
+                        src="{{ asset('images/home1.jpg') }}"
+                        alt="Outletin"
+                        class="mt-4 aspect-[4/3] w-full rounded-3xl object-cover shadow-2xl"
+                    >
+                </div>
+            </div>
+        </div>
+    </section>
 </header>
 
-<!-- Features -->
-<section class="container mx-auto px-4 py-16">
-  <div class="text-center mb-12">
-    <h2 class="text-4xl md:text-5xl font-bold text-black mb-3">
-      Semua yang Anda butuhkan
-    </h2>
-
-    <p class="text-gray-600 text-base md:text-lg">
-      Fitur lengkap untuk mengelola bisnis outlet Anda dengan efisien
-    </p>
-  </div>
-
-  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-
-    <!-- Card 1 -->
-    <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition max-w-sm mx-auto w-full">
-      <div class="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5L5 5h14l2 5.5M4 10.5h16M5 10.5V19h14v-8.5M9 19v-4h6v4" />
-        </svg>
-      </div>
-
-      <h3 class="text-xl font-bold text-black mb-3">
-        Manajemen Outlet
-      </h3>
-
-      <p class="text-gray-600 text-base leading-8 mb-6">
-        Kelola multiple outlet dari satu dashboard. Pantau performa setiap cabang secara real-time.
-      </p>
-
-      <ul class="space-y-3 text-gray-800 text-base">
-        <li class="flex items-center gap-3">✓ Multi-outlet support</li>
-        <li class="flex items-center gap-3">✓ Real-time monitoring</li>
-        <li class="flex items-center gap-3">✓ Performance analytics</li>
-      </ul>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition max-w-sm mx-auto w-full">
-      <div class="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
-        </svg>
-      </div>
-
-      <h3 class="text-xl font-bold text-black mb-3">
-        Manajemen Bahan Baku
-      </h3>
-
-      <p class="text-gray-600 text-base leading-8 mb-6">
-        Kontrol stok bahan baku dengan sistem inventori cerdas. Hindari kehabisan stok atau pemborosan.
-      </p>
-
-      <ul class="space-y-3 text-gray-800 text-base">
-        <li class="flex items-center gap-3">✓ Auto stock alerts</li>
-        <li class="flex items-center gap-3">✓ Supplier management</li>
-        <li class="flex items-center gap-3">✓ Waste tracking</li>
-      </ul>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition max-w-sm mx-auto w-full">
-      <div class="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h7l5 5v13H7z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M14 3v5h5M9 13h6M9 17h6M9 9h2" />
-        </svg>
-      </div>
-
-      <h3 class="text-xl font-bold text-black mb-3">
-        Laporan Keuangan
-      </h3>
-
-      <p class="text-gray-600 text-base leading-8 mb-6">
-        Buat laporan keuangan lengkap dengan satu klik. Pantau profit, expense, dan cash flow dengan mudah.
-      </p>
-
-      <ul class="space-y-3 text-gray-800 text-base">
-        <li class="flex items-center gap-3">✓ Automated reports</li>
-        <li class="flex items-center gap-3">✓ Profit & loss tracking</li>
-        <li class="flex items-center gap-3">✓ Export to Excel</li>
-      </ul>
-    </div>
-
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="container mx-auto px-4 pb-12">
-  <div class="relative overflow-hidden rounded-3xl bg-red-800 px-8 py-12 md:px-12 lg:px-16">
-
-    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-
-      <div>
-        <h2 class="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
-          Siap membangun<br>
-          masa depan bisnis<br>
-          Anda?
-        </h2>
-
-        <p class="text-white text-base leading-relaxed mb-8 max-w-lg">
-          Bergabunglah dengan ratusan brand dan mitra yang telah mentransformasi
-          strategi ekspansi mereka melalui Outletin.
-        </p>
-
-        <div class="space-y-4 max-w-md">
-          <div class="bg-red-700 rounded-xl p-5 shadow-md">
-            <h4 class="text-white font-bold mb-2">
-              Untuk Pemilik Brand
-            </h4>
-
-            <p class="text-white text-sm mb-4">
-              Digitalisasi model waralaba Anda dan mulai penskalaan dengan mitra yang terverifikasi.
+<main>
+    <section class="mx-auto max-w-7xl px-4 py-20">
+        <div class="mb-12 max-w-3xl" data-reveal>
+            <p class="mb-3 text-sm font-extrabold uppercase tracking-normal text-oxblood">Operational clarity</p>
+            <h2 class="premium-section-title">
+                Semua yang Anda butuhkan untuk mengelola jaringan outlet.
+            </h2>
+            <p class="premium-muted mt-5">
+                Fokus pada alur kerja harian: monitoring outlet, inventori, dan laporan. UI dibuat lapang agar data tetap mudah dipindai.
             </p>
-
-            <a href="{{ url('/login') }}" class="block w-full text-center bg-red-500 text-white font-semibold py-3 rounded-lg hover:bg-white hover:text-red-700 transition">
-              Mulai Sekarang
-            </a>
-          </div>
-
-          <div class="bg-red-700 rounded-xl p-5 shadow-md">
-            <h4 class="text-white font-bold mb-2">
-              Untuk Mitra
-            </h4>
-
-            <p class="text-white text-sm mb-4">
-              Telusuri peluang investasi premium dan kelola portofolio Anda.
-            </p>
-
-            <a href="{{ url('/outlet') }}" class="block w-full text-center border border-white text-white font-semibold py-3 rounded-lg hover:bg-white hover:text-red-700 transition">
-              Telusuri Brand
-            </a>
-          </div>
         </div>
-      </div>
 
-      <!-- Kanan -->
-      <div class="flex justify-center lg:justify-end">
-        <div class="bg-red-700 p-4 rounded-2xl shadow-xl">
-          <img
-            src="{{ asset('images/home1.jpg') }}"
-            alt="Outletin"
-            class="w-full max-w-sm rounded-xl shadow-2xl object-cover"
-          >
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <article class="premium-card premium-card-hover p-8" data-reveal>
+                <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-oxblood text-2xl font-extrabold text-white shadow-[0_16px_36px_rgb(85,11,20,0.24)]">01</div>
+                <h3 class="text-xl font-extrabold text-ink">Manajemen Outlet</h3>
+                <p class="premium-muted mt-3">Kelola banyak outlet dari satu dashboard dan pantau status cabang dengan ritme operasional yang lebih jelas.</p>
+                <ul class="mt-6 space-y-3 text-sm font-semibold text-taupe">
+                    <li>Multi-outlet support</li>
+                    <li>Real-time monitoring</li>
+                    <li>Performance analytics</li>
+                </ul>
+            </article>
+
+            <article class="premium-card premium-card-hover p-8" data-reveal>
+                <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-linen text-2xl font-extrabold text-oxblood shadow-[0_16px_36px_rgb(126,105,97,0.20)]">02</div>
+                <h3 class="text-xl font-extrabold text-ink">Manajemen Bahan Baku</h3>
+                <p class="premium-muted mt-3">Kontrol stok bahan baku agar suplai, pemborosan, dan kebutuhan outlet bisa dikelola lebih presisi.</p>
+                <ul class="mt-6 space-y-3 text-sm font-semibold text-taupe">
+                    <li>Auto stock alerts</li>
+                    <li>Supplier management</li>
+                    <li>Waste tracking</li>
+                </ul>
+            </article>
+
+            <article class="premium-card premium-card-hover p-8" data-reveal>
+                <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-taupe text-2xl font-extrabold text-white shadow-[0_16px_36px_rgb(126,105,97,0.24)]">03</div>
+                <h3 class="text-xl font-extrabold text-ink">Laporan Keuangan</h3>
+                <p class="premium-muted mt-3">Lihat income, expense, dan profit dengan tampilan yang bersih untuk keputusan bisnis lebih cepat.</p>
+                <ul class="mt-6 space-y-3 text-sm font-semibold text-taupe">
+                    <li>Automated reports</li>
+                    <li>Profit & loss tracking</li>
+                    <li>Export-ready insight</li>
+                </ul>
+            </article>
         </div>
-      </div>
+    </section>
 
-    </div>
-  </div>
-</section>
+    <section class="mx-auto max-w-7xl px-4 pb-20">
+        <div class="relative overflow-hidden rounded-[2rem] bg-oxblood px-6 py-12 shadow-[0_24px_80px_rgb(85,11,20,0.20)] md:px-12 lg:px-16" data-reveal>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgb(203,192,178,0.32),transparent_32rem)]"></div>
+            <div class="relative grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+                <div>
+                    <h2 class="text-4xl font-extrabold leading-tight text-white md:text-5xl">
+                        Bangun ekspansi brand dengan pengalaman yang lebih rapi.
+                    </h2>
+                    <p class="mt-5 max-w-xl leading-8 text-ivory/82">
+                        Pemilik brand dapat mengelola data franchise, sementara mitra bisa menemukan peluang dan mengajukan outlet tanpa proses yang terasa berat.
+                    </p>
+                </div>
 
-<footer class="bg-black text-white py-10 mt-12">
-  <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-3xl border border-white/15 bg-white/10 p-6 text-white backdrop-blur-md">
+                        <h4 class="text-lg font-extrabold">Untuk Pemilik Brand</h4>
+                        <p class="mt-3 text-sm leading-7 text-ivory/78">Digitalisasi model waralaba dan kelola pengajuan mitra dengan alur yang lebih elegan.</p>
+                        <a href="{{ url('/login') }}" class="premium-button mt-5 w-full bg-gradient-to-r from-linen to-ivory text-oxblood">
+                            Mulai Sekarang
+                        </a>
+                    </div>
 
-      <div>
-        <h3 class="text-2xl font-bold mb-3">
-          Outletin
-        </h3>
+                    <div class="rounded-3xl border border-white/15 bg-white/10 p-6 text-white backdrop-blur-md">
+                        <h4 class="text-lg font-extrabold">Untuk Mitra</h4>
+                        <p class="mt-3 text-sm leading-7 text-ivory/78">Telusuri brand yang tersedia dan kelola portofolio outlet Anda dari satu tempat.</p>
+                        <a href="{{ url('/outlet') }}" class="premium-button-soft mt-5 w-full bg-white/10 text-white hover:text-oxblood">
+                            Telusuri Brand
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
 
-        <p class="text-gray-400 leading-7">
-          Solusi modern untuk mengelola outlet, stok, dan laporan keuangan bisnis Anda.
-        </p>
-      </div>
-
-      <div>
-        <h4 class="text-lg font-semibold mb-3">
-          Menu
-        </h4>
-
-        <ul class="space-y-2 text-gray-400">
-          <li><a href="{{ url('/') }}" class="hover:text-white transition">Home</a></li>
-          <li><a href="{{ url('/outlet') }}" class="hover:text-white transition">Outlet</a></li>
-          <li><a href="{{ url('/about') }}" class="hover:text-white transition">About Us</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="text-lg font-semibold mb-3">
-          Kontak
-        </h4>
-
-        <p class="text-gray-400">Email: info@outletin.com</p>
-        <p class="text-gray-400">Telp: +62 812 3456 7890</p>
-      </div>
-
-    </div>
-
-    <div class="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">
-      <p>&copy; 2026 Outletin. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
-
-</body>
-</html>
+@endsection

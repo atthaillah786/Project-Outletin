@@ -1,30 +1,8 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Brand - Outletin</title>
+@extends('layouts.auth')
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
+@section('title', 'Daftar Brand - Outletin')
 
-<body class="bg-gray-50 min-h-screen">
-
-<nav class="bg-red-800 text-white sticky top-0 z-50 shadow-md">
-    <div class="container mx-auto flex items-center justify-between px-4 py-4">
-        <a href="{{ route('home') }}" class="text-xl font-bold">
-            Outletin
-        </a>
-
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="bg-red-600 px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">
-                Keluar
-            </button>
-        </form>
-    </div>
-</nav>
-
+@section('content')
 <main class="container mx-auto px-4 py-12">
     <section class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 
@@ -136,5 +114,4 @@
     </section>
 </main>
 
-</body>
-</html>
+@endsection

@@ -3,20 +3,21 @@
 @section('title', 'CRUD Brand - Outletin')
 
 @section('content')
-<section class="mb-6 flex items-center justify-between">
+<section class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between" data-reveal>
     <div>
-        <h1 class="text-3xl font-bold">Data Brand</h1>
-        <p class="text-gray-600">Kelola data brand franchise.</p>
+        <p class="mb-2 text-sm font-extrabold uppercase tracking-normal text-oxblood">Brand library</p>
+        <h1 class="text-3xl font-extrabold text-ink">Data Brand</h1>
+        <p class="premium-muted">Kelola data brand franchise.</p>
     </div>
 
-    <a href="{{ route('manage.brands.create') }}" class="bg-red-700 text-white px-5 py-3 rounded-xl font-semibold hover:bg-red-800">
+    <a href="{{ route('manage.brands.create') }}" class="premium-button">
         Tambah Brand
     </a>
 </section>
 
-<section class="bg-white border rounded-2xl p-6 shadow-sm">
+<section class="premium-card p-6" data-reveal>
     <div class="overflow-x-auto">
-        <table class="w-full text-left">
+        <table class="premium-table">
             <thead>
                 <tr class="border-b text-sm text-gray-500">
                     <th class="py-3 pr-4">Logo</th>
@@ -58,14 +59,14 @@
 
                         <td class="py-4 pr-4">
                             <div class="flex gap-2">
-                                <a href="{{ route('manage.brands.edit', $brand->brand_id) }}" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm">
+                                <a href="{{ route('manage.brands.edit', $brand->brand_id) }}" class="rounded-full bg-taupe px-3 py-2 text-sm font-bold text-white transition hover:bg-ink">
                                     Edit
                                 </a>
 
                                 <form method="POST" action="{{ route('manage.brands.destroy', $brand->brand_id) }}" onsubmit="return confirm('Hapus brand ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="bg-red-600 text-white px-3 py-2 rounded-lg text-sm">
+                                    <button class="rounded-full bg-oxblood px-3 py-2 text-sm font-bold text-white transition hover:bg-ink">
                                         Hapus
                                     </button>
                                 </form>

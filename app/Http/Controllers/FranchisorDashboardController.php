@@ -107,7 +107,24 @@ class FranchisorDashboardController extends Controller
 
         $outlet = Outlet::where('outlet_id', $id)
             ->whereIn('brand_id', $brandIds)
-            ->firstOrFail();
+            ->first();
+
+        if (!$outlet) {
+            return redirect()
+                ->route('franchisor.dashboard')
+                ->withErrors([
+                    'approve' => 'Pengajuan tidak ditemukan untuk brand anda (pastikan brand sudah approved dan pengajuan masih pending).',
+                ]);
+        }
+
+        // Hanya izinkan approve untuk outlet yang pending
+        if ($outlet->status !== 'pending') {
+            return redirect()
+                ->route('franchisor.dashboard')
+                ->withErrors([
+                    'approve' => 'Pengajuan ini sudah diproses sebelumnya.',
+                ]);
+        }
 
         $outlet->update([
             'status' => 'approved',
@@ -148,7 +165,24 @@ class FranchisorDashboardController extends Controller
 
         $outlet = Outlet::where('outlet_id', $id)
             ->whereIn('brand_id', $brandIds)
-            ->firstOrFail();
+            ->first();
+
+        if (!$outlet) {
+            return redirect()
+                ->route('franchisor.dashboard')
+                ->withErrors([
+                    'reject' => 'Pengajuan tidak ditemukan untuk brand anda (pastikan brand sudah approved dan pengajuan masih pending).',
+                ]);
+        }
+
+        // Hanya izinkan reject untuk outlet yang pending
+        if ($outlet->status !== 'pending') {
+            return redirect()
+                ->route('franchisor.dashboard')
+                ->withErrors([
+                    'reject' => 'Pengajuan ini sudah diproses sebelumnya.',
+                ]);
+        }
 
         $outlet->update([
             'status' => 'rejected',

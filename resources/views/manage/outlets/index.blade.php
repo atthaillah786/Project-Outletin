@@ -3,20 +3,21 @@
 @section('title', 'CRUD Outlet - Outletin')
 
 @section('content')
-<section class="mb-6 flex items-center justify-between">
+<section class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between" data-reveal>
     <div>
-        <h1 class="text-3xl font-bold">Data Outlet</h1>
-        <p class="text-gray-600">Kelola data outlet franchise.</p>
+        <p class="mb-2 text-sm font-extrabold uppercase tracking-normal text-oxblood">Outlet operations</p>
+        <h1 class="text-3xl font-extrabold text-ink">Data Outlet</h1>
+        <p class="premium-muted">Kelola data outlet franchise.</p>
     </div>
 
-    <a href="{{ route('manage.outlets.create') }}" class="bg-red-700 text-white px-5 py-3 rounded-xl font-semibold hover:bg-red-800">
+    <a href="{{ route('manage.outlets.create') }}" class="premium-button">
         Tambah Outlet
     </a>
 </section>
 
-<section class="bg-white border rounded-2xl p-6 shadow-sm">
+<section class="premium-card p-6" data-reveal>
     <div class="overflow-x-auto">
-        <table class="w-full text-left">
+        <table class="premium-table">
             <thead>
                 <tr class="border-b text-sm text-gray-500">
                     <th class="py-3 pr-4">Outlet</th>
@@ -38,12 +39,12 @@
                         <td class="py-4 pr-4">{{ $outlet->address ?? '-' }}</td>
                         <td class="py-4 pr-4">
                             <div class="flex gap-2">
-                                <a href="{{ route('manage.outlets.edit', $outlet->outlet_id) }}" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm">Edit</a>
+                                <a href="{{ route('manage.outlets.edit', $outlet->outlet_id) }}" class="rounded-full bg-taupe px-3 py-2 text-sm font-bold text-white transition hover:bg-ink">Edit</a>
 
                                 <form method="POST" action="{{ route('manage.outlets.destroy', $outlet->outlet_id) }}" onsubmit="return confirm('Hapus outlet ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="bg-red-600 text-white px-3 py-2 rounded-lg text-sm">Hapus</button>
+                                    <button class="rounded-full bg-oxblood px-3 py-2 text-sm font-bold text-white transition hover:bg-ink">Hapus</button>
                                 </form>
                             </div>
                         </td>

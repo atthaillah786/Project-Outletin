@@ -11,8 +11,40 @@ use Illuminate\Support\Facades\Auth;
 
 class FranchiseeDashboardController extends Controller
 {
+    // Route GET: /dashboard/franchisee/brands/{id}/apply
+    // Perbaiki error: method createOutletApplication() dipanggil oleh route, namun sebelumnya tidak ada.
+    public function createOutletApplication($id)
+    {
+        $user = Auth::user();
+
+        if (!$user || $user->role !== 'franchise') {
+            abort(403, 'Akses hanya untuk franchisee.');
+        }
+
+        // Ambil brand yang sudah approved
+        $brand = Brand::where('status', 'approved')
+            ->where('brand_id', $id)
+            ->firstOrFail();
+
+        // Jika sudah pernah apply, kembalikan ke dashboard
+        $existing = FranchiseBrand::where('franchise_id', $user->user_id)
+            ->where('brand_id', $brand->brand_id)
+            ->first();
+
+        if ($existing) {
+            return redirect()
+                ->route('franchisee.dashboard')
+                ->with('success', 'Anda sudah pernah mengajukan ke brand ini.');
+        }
+
+        // Tanpa mengubah fungsi utama, GET ini langsung melakukan proses apply yang sebelumnya ada di applyToBrand()
+        // karena project belum memiliki blade khusus form aplikasi.
+        return $this->applyToBrand($brand->brand_id);
+    }
+
     public function index()
     {
+
         $user = Auth::user();
 
         if (!$user || $user->role !== 'franchise') {
@@ -94,6 +126,18 @@ class FranchiseeDashboardController extends Controller
                 ->with('success', 'Anda sudah pernah mengajukan ke brand ini.');
         }
 
+        // Buat outlet (pending) agar tampil di dashboard franchisor.
+        // Dashboard franchisor saat ini mengambil pengajuan dari table `outlets`.
+        // Ini tidak mengubah proses utama (pengajuan), hanya memastikan data yang dibaca sesuai.
+        $outlet = Outlet::create([
+            'franchise_id' => $user->user_id,
+            'brand_id' => $brand->brand_id,
+            'outlet_name' => 'Outlet Pending',
+            'address' => null,
+            'status' => 'pending',
+        ]);
+
+        // Tetap simpan relasi franchise_brand (jika dipakai halaman lain)
         FranchiseBrand::create([
             'franchise_id' => $user->user_id,
             'brand_id' => $brand->brand_id,
