@@ -142,6 +142,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/franchisor/outlets/{id}/reject', [FranchisorDashboardController::class, 'rejectApplication'])
         ->name('franchisor.applications.reject');
 
+    // Franchisor view: brand financials
+    Route::get('/dashboard/franchisor/brands/{id}/financials', [\App\Http\Controllers\BrandFinancialController::class, 'index'])
+        ->name('franchisor.brand.financials');
+    Route::get('/dashboard/franchisor/brands/{id}/financials/download', [\App\Http\Controllers\BrandFinancialController::class, 'download'])
+        ->name('franchisor.brand.financials.download');
+
+    // Franchisor: compare today's income across all outlets
+    Route::get('/dashboard/franchisor/outlets-today', [\App\Http\Controllers\FranchisorFinancialController::class, 'todayPerOutlet'])
+        ->name('franchisor.financial.outlets_today');
+
+    // Franchisor: daily transaction chart comparison across all outlets
+    Route::get('/dashboard/franchisor/harian', [\App\Http\Controllers\FranchisorFinancialController::class, 'dailyPerOutlet'])
+        ->name('franchisor.financial.daily');
 
     /*
     |--------------------------------------------------------------------------
@@ -183,6 +196,18 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard/franchisee/produk', [FranchiseeProdukController::class, 'index'])
         ->name('franchisee.produk.index');
+
+    // Financial reports: franchisee (outlet) input
+    Route::get('/dashboard/franchisee/financial-report/create', [\App\Http\Controllers\OutletFinancialReportController::class, 'create'])
+        ->name('franchisee.financial.create');
+    Route::post('/dashboard/franchisee/financial-report', [\App\Http\Controllers\OutletFinancialReportController::class, 'store'])
+        ->name('franchisee.financial.store');
+    Route::get('/dashboard/franchisee/outlets/{id}/products', [\App\Http\Controllers\OutletFinancialReportController::class, 'outletProducts'])
+        ->name('franchisee.outlet.products');
+
+    // Outlet manager: weekly trend for a single outlet
+    Route::get('/dashboard/franchisee/outlets/{outlet}/finance', [\App\Http\Controllers\OutletManagerController::class, 'weeklyTrend'])
+        ->name('franchisee.outlet.finance');
 
 
     /*

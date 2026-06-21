@@ -31,15 +31,7 @@
                 </div>
             @endif
 
-            @if (!empty($brand) && $brand->status === 'rejected')
-                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6">
-                    <p class="font-semibold">Pendaftaran brand sebelumnya ditolak.</p>
-                    <p class="text-sm mt-1">
-                        {{ $brand->rejection_note ?? 'Silakan perbaiki data brand Anda dan ajukan ulang.' }}
-                    </p>
-                </div>
-            @endif
-
+            {{-- WAJIB: Tambahkan enctype="multipart/form-data" agar file bisa terkirim --}}
             <form method="POST" action="{{ route('brand.registration.store') }}" enctype="multipart/form-data" class="space-y-5">
                 @csrf
 
@@ -47,12 +39,11 @@
                     <label for="brand_name" class="block text-sm font-semibold text-gray-700 mb-2">
                         Nama Brand
                     </label>
-
                     <input
                         type="text"
                         id="brand_name"
                         name="brand_name"
-                        value="{{ old('brand_name', $brand->brand_name ?? '') }}"
+                        value="{{ old('brand_name') }}"
                         placeholder="Contoh: Kopi Nusantara"
                         class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
                         required
@@ -63,21 +54,20 @@
                     <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
                         Deskripsi Brand
                     </label>
-
                     <textarea
                         id="description"
                         name="description"
                         rows="5"
                         placeholder="Jelaskan singkat tentang brand Anda"
                         class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
-                    >{{ old('description', $brand->description ?? '') }}</textarea>
+                    >{{ old('description') }}</textarea>
                 </div>
 
                 <div>
                     <label for="logo" class="block text-sm font-semibold text-gray-700 mb-2">
                         Logo Brand
                     </label>
-
+                    {{-- Nama field harus 'logo' agar sinkron dengan controller --}}
                     <input
                         type="file"
                         id="logo"
@@ -86,9 +76,8 @@
                         class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
                         required
                     >
-
                     <p class="text-sm text-gray-500 mt-2">
-                        Format: JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.
+                        Format: JPG, JPEG, PNG, atau WEBP. Maksimal 5 MB.
                     </p>
                 </div>
 
@@ -105,7 +94,6 @@
             <h2 class="text-3xl font-bold mb-4">
                 Verifikasi sebelum dashboard aktif
             </h2>
-
             <p class="text-red-100 leading-8">
                 Setelah brand Anda dikirim, superadmin akan memeriksa data dan logo. Dashboard pemilik brand baru terbuka setelah status brand menjadi approved.
             </p>
@@ -113,5 +101,4 @@
 
     </section>
 </main>
-
 @endsection

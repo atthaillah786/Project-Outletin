@@ -52,6 +52,10 @@
             </p>
         </div>
 
+        <div class="flex items-center gap-3">
+            <a href="{{ route('franchisor.financial.outlets_today') }}" class="premium-button">Pendapatan Hari Ini (per Outlet)</a>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
             <div class="rounded-2xl bg-mist/70 px-4 py-3">
                 <p class="text-taupe">Income</p>

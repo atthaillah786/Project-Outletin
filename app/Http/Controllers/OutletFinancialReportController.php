@@ -1,0 +1,89 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Outlet;
+use App\Models\Produk;
+use App\Models\FinancialReport;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class OutletFinancialReportController extends Controller
+{
+    public function create(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || $user->role !== 'franchise') {
+            abort(403, 'Akses hanya untuk pemilik outlet.');
+        }
+
+        $outlets = Outlet::where('franchise_id', $user->user_id)->get();
+
+        $selectedOutlet = $request->query('outlet');
+
+        return view('financial.create', compact('outlets', 'selectedOutlet'));
+    }
+
+    public function outletProducts($id)
+    {
+        $user = Auth::user();
+
+        $outlet = Outlet::findOrFail($id);
+        if ($outlet->franchise_id !== $user->user_id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $products = Produk::where('brand_id', $outlet->brand_id)->get(['produk_id', 'produk_name', 'Price']);
+
+        return response()->json($products);
+    }
+
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || $user->role !== 'franchise') {
+            abort(403, 'Akses hanya untuk pemilik outlet.');
+        }
+
+        $data = $request->validate([
+            'outlet_id' => ['required', 'integer'],
+            'report_date' => ['required', 'date'],
+            'quantities' => ['nullable', 'array'],
+            'quantities.*' => ['nullable', 'integer', 'min:0'],
+            'total_expense' => ['nullable', 'numeric'],
+        ]);
+
+        $outlet = Outlet::findOrFail($data['outlet_id']);
+        if ($outlet->franchise_id !== $user->user_id) {
+            abort(403, 'Outlet tidak ditemukan atau tidak dimiliki.');
+        }
+
+        $quantities = $data['quantities'] ?? [];
+
+        $totalItems = 0;
+        $totalIncome = 0;
+
+        foreach ($quantities as $produkId => $qty) {
+            $qty = (int) $qty;
+            if ($qty <= 0) continue;
+            $produk = Produk::find($produkId);
+            if (!$produk) continue;
+            $totalItems += $qty;
+            $price = (float) $produk->Price;
+            $totalIncome += $price * $qty;
+        }
+
+        $report = FinancialReport::updateOrCreate([
+            'outlet_id' => $outlet->outlet_id,
+            'report_date' => $data['report_date'],
+        ], [
+            'total_items' => $totalItems,
+            'total_income' => $totalIncome,
+            'total_expense' => $data['total_expense'] ?? 0,
+        ]);
+
+        return redirect()->route('franchisee.financial.create')->with('success', 'Laporan keuangan harian berhasil disimpan. Total item: ' . $totalItems);
+    }
+}

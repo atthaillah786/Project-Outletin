@@ -47,6 +47,14 @@
                             Dashboard
                         </a>
 
+                        <a href="{{ route('franchisor.financial.outlets_today') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
+                            Pendapatan Hari Ini
+                        </a>
+
+                        <a href="{{ route('franchisor.financial.daily') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
+                            Grafik Harian
+                        </a>
+
                         <a href="{{ route('manage.brands.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Brand Saya
                         </a>
@@ -68,6 +76,10 @@
 
                         <a href="{{ route('manage.outlets.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
                             Outlet Saya
+                        </a>
+
+                        <a href="{{ route('franchisee.financial.create') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
+                            Input Laporan
                         </a>
 
                         <a href="{{ route('franchisee.produk.index') }}" class="rounded-full px-4 py-2 transition hover:bg-oxblood hover:text-white">
@@ -139,6 +151,14 @@
                         Dashboard
                     </a>
 
+                    <a href="{{ route('franchisor.financial.outlets_today') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
+                        Pendapatan Hari Ini
+                    </a>
+
+                    <a href="{{ route('franchisor.financial.daily') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
+                        Grafik Harian
+                    </a>
+
                     <a href="{{ route('manage.brands.index') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Brand Saya
                     </a>
@@ -164,6 +184,10 @@
 
                     <a href="{{ route('franchisee.produk.index') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
                         Produk Brand
+                    </a>
+
+                    <a href="{{ route('franchisee.financial.create') }}" class="rounded-full bg-white/70 px-3 py-2 font-semibold text-oxblood shadow-sm">
+                        Input Laporan
                     </a>
                 @endif
 

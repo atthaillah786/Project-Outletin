@@ -42,4 +42,10 @@ class Outlet extends Model
     {
         return $this->hasMany(FinancialReport::class, 'outlet_id', 'outlet_id');
     }
+
+    // Relasi ke transaksi harian
+    public function transactions()
+    {
+        return $this->hasMany(\App\Models\Transaction::class, 'outlet_id', 'outlet_id');
+    }
 }

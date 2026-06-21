@@ -6,22 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
-    {
-        Schema::create('brands', function (Blueprint $table) {
-            $table->increments('brand_id');
-            $table->unsignedInteger('franchisor_id');
-            $table->string('brand_name', 100);
-            $table->text('description')->nullable();
-            $table->timestamp('created_at')->nullable()->useCurrent();
-
-            $table->foreign('franchisor_id')
-                ->references('user_id')
-                ->on('users')
-                ->onUpdate('cascade')
-                ->onDelete('restrict');
-        });
-    }
+public function up(): void
+{
+    Schema::create('brands', function (Blueprint $table) {
+        $table->id('brand_id'); // Primary key
+        $table->string('brand_name');
+        $table->text('description')->nullable();
+        $table->string('logo_path')->nullable(); // <-- GUNANYA: Menyimpan jalur/path teks file gambar di storage
+        $table->timestamps();
+    });
+}
 
     public function down(): void
     {

@@ -40,10 +40,12 @@ class BrandRegistrationController extends Controller
             abort(403, 'Akses hanya untuk pemilik brand.');
         }
 
+        // VALIDASI: Tetap menggunakan 'logo' sesuai form blade kamu
         $validated = $request->validate([
             'brand_name' => ['required', 'string', 'max:100'],
             'description' => ['nullable', 'string'],
-            'logo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            // 'max' rule expects kilobytes — 5120 KB = 5 MB
+            'logo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'], // Maksimal 5MB
         ]);
 
         $existingBrand = Brand::where('franchisor_id', $user->user_id)
@@ -60,9 +62,11 @@ class BrandRegistrationController extends Controller
                 ->with('success', 'Brand Anda masih menunggu verifikasi superadmin.');
         }
 
+        // PROSES UPLOAD: Menggunakan key 'logo'
         $logoPath = $request->file('logo')->store('brand-logos', 'public');
 
         if ($existingBrand && $existingBrand->status === 'rejected') {
+            // Hapus logo lama jika ada
             if ($existingBrand->logo_path) {
                 Storage::disk('public')->delete($existingBrand->logo_path);
             }
@@ -77,6 +81,7 @@ class BrandRegistrationController extends Controller
                 'rejection_note' => null,
             ]);
         } else {
+            // Create baru
             Brand::create([
                 'franchisor_id' => $user->user_id,
                 'brand_name' => $validated['brand_name'],

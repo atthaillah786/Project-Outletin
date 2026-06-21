@@ -40,7 +40,14 @@
 <section class="premium-card p-6 mb-8" data-reveal>
     <h2 class="text-2xl font-extrabold text-ink mb-1">Grafik Keuangan Outlet Saya</h2>
     <p class="premium-muted mb-6">Pendapatan, pengeluaran, dan profit per bulan.</p>
-    <canvas id="financeChart" height="110"></canvas>
+    <div class="flex items-center justify-between mb-4">
+        <div class="w-full">
+            <canvas id="financeChart" height="110"></canvas>
+        </div>
+        <div class="ml-6">
+            <a href="{{ route('franchisee.financial.create') }}" class="premium-button">Input Laporan</a>
+        </div>
+    </div>
 </section>
 
 <section id="brands" class="mb-8">
@@ -124,6 +131,7 @@
                     <th class="py-3">Brand</th>
                     <th class="py-3">Status</th>
                     <th class="py-3">Alamat</th>
+                    <th class="py-3">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -133,6 +141,9 @@
                     <td class="py-4">{{ $outlet->brand->brand_name ?? '-' }}</td>
                     <td class="py-4">{{ ucfirst($outlet->status) }}</td>
                     <td class="py-4">{{ $outlet->address ?? '-' }}</td>
+                    <td class="py-4">
+                        <a href="{{ route('franchisee.financial.create') }}?outlet={{ $outlet->outlet_id }}" class="text-sm text-blue-600">Input Laporan</a>
+                    </td>
                 </tr>
                 @empty
                 <tr>

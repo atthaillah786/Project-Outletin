@@ -4,7 +4,8 @@
 
 @section('content')
 @php
-    $searchTerm = $search ?? '';
+    // GUNANYA: Menyelaraskan pencarian agar menangkap parameter "q" langsung dari request URL jika tersedia
+    $searchTerm = request('q', $search ?? '');
     $brandList = $brands ?? collect();
 @endphp
 
@@ -59,10 +60,11 @@
             @php
                 $brandName = $brand->brand_name;
                 $description = $brand->description;
-                $initial = strtoupper(substr($brand->brand_name, 0, 1));
+                $initial = strtoupper(substr($brandName, 0, 1));
             @endphp
 
             <article class="premium-card premium-card-hover flex h-full flex-col p-7" data-reveal>
+                {{-- SINKRONISASI GAMBAR: Membaca data logo_path hasil upload controller baru --}}
                 @if (!empty($brand->logo_path))
                     <img
                         src="{{ asset('storage/' . $brand->logo_path) }}"
@@ -70,6 +72,7 @@
                         class="mb-6 h-20 w-20 rounded-3xl border border-linen/70 object-cover shadow-sm"
                     >
                 @else
+                    {{-- Inisial huruf sebagai backup jika data gambar kosong --}}
                     <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-oxblood to-taupe shadow-[0_16px_36px_rgb(85,11,20,0.22)]">
                         <span class="text-3xl font-extrabold text-white">
                             {{ $initial }}
@@ -85,7 +88,7 @@
                     {{ $description ?? 'Belum ada deskripsi.' }}
                 </p>
 
-                <a href="#" class="premium-button mt-6 w-full">
+                <a href="#" class="premium-button mt-6 w-full text-center block">
                     Lihat Brand
                 </a>
             </article>

@@ -18,12 +18,14 @@ class FinancialReport extends Model
     protected $fillable = [
         'outlet_id',
         'report_date',
+        'total_items',
         'total_income',
         'total_expense',
     ];
 
     protected $casts = [
         'report_date' => 'date',
+        'total_items' => 'integer',
         'total_income' => 'decimal:2',
         'total_expense' => 'decimal:2',
     ];
