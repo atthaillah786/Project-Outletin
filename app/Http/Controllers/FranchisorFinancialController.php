@@ -24,25 +24,34 @@ class FranchisorFinancialController extends Controller
         $outlets = Outlet::whereHas('brand', function ($q) use ($user) {
                 $q->where('franchisor_id', $user->user_id)->where('status', 'approved');
             })
-            ->withCount(['financialReports as today_transactions_count' => function ($q) use ($today) {
+            ->withSum(['financialReports as today_total_items' => function ($q) use ($today) {
                 $q->whereDate('report_date', $today);
-            }])
+            }], 'total_items')
             ->withSum(['financialReports as today_total_income' => function ($q) use ($today) {
                 $q->whereDate('report_date', $today);
             }], 'total_income')
+            ->withSum(['financialReports as today_total_expense' => function ($q) use ($today) {
+                $q->whereDate('report_date', $today);
+            }], 'total_expense')
             ->orderBy('outlet_name')
             ->get();
 
         $labels = $outlets->pluck('outlet_name')->toArray();
-        $data = $outlets->map(fn($o) => (float) ($o->today_total_income ?? 0))->toArray();
+
+        // Income data untuk bar chart
+        $incomeData = $outlets->map(fn($o) => (float) ($o->today_total_income ?? 0))->toArray();
+        // Expense data untuk bar chart (warna berbeda)
+        $expenseData = $outlets->map(fn($o) => (float) ($o->today_total_expense ?? 0))->toArray();
 
         $tableRows = $outlets->map(fn($o) => [
             'outlet_name' => $o->outlet_name,
-            'transactions' => (int) ($o->today_transactions_count ?? 0),
+            'total_items' => (int) ($o->today_total_items ?? 0),
             'total_income' => (float) ($o->today_total_income ?? 0),
+            'total_expense' => (float) ($o->today_total_expense ?? 0),
+            'total_profit' => (float) (($o->today_total_income ?? 0) - ($o->today_total_expense ?? 0)),
         ])->toArray();
 
-        return view('dashboard.franchisor_outlets_today', compact('labels', 'data', 'tableRows'));
+        return view('dashboard.franchisor_outlets_today', compact('labels', 'incomeData', 'expenseData', 'tableRows'));
     }
 
     /**
@@ -86,18 +95,6 @@ class FranchisorFinancialController extends Controller
             $dateKeys[] = $current->toDateString();
         }
 
-        // Colors for each outlet
-        $colors = [
-            'rgba(54, 162, 235, 0.8)',
-            'rgba(255, 99, 132, 0.8)',
-            'rgba(255, 206, 86, 0.8)',
-            'rgba(75, 192, 192, 0.8)',
-            'rgba(153, 102, 255, 0.8)',
-            'rgba(255, 159, 64, 0.8)',
-            'rgba(99, 255, 132, 0.8)',
-            'rgba(255, 99, 255, 0.8)',
-        ];
-
         // Fetch all financial reports for these outlets in the date range
         $outletIds = $outlets->pluck('outlet_id');
         $reports = FinancialReport::whereIn('outlet_id', $outletIds)
@@ -110,7 +107,7 @@ class FranchisorFinancialController extends Controller
         $expenseDatasets = [];
 
         foreach ($outlets as $index => $outlet) {
-            // Build lookup keyed by date string (toDateString) to avoid Carbon cast comparison issues
+            // Build lookup keyed by date string to avoid Carbon cast comparison issues
             $reportLookup = [];
             foreach ($reports->where('outlet_id', $outlet->outlet_id) as $r) {
                 $reportLookup[$r->report_date->toDateString()] = $r;
@@ -129,22 +126,32 @@ class FranchisorFinancialController extends Controller
                 }
             }
 
-            $color = $colors[$index % count($colors)];
-            $borderColor = str_replace('0.8', '1', $color);
+            // Distinct colors per outlet — 8 unique palettes
+            $palettes = [
+                ['bg' => 'rgba(54, 162, 235, 0.75)',  'border' => 'rgba(54, 162, 235, 1)'],
+                ['bg' => 'rgba(255, 99, 132, 0.75)',  'border' => 'rgba(255, 99, 132, 1)'],
+                ['bg' => 'rgba(255, 206, 86, 0.75)',  'border' => 'rgba(255, 206, 86, 1)'],
+                ['bg' => 'rgba(75, 192, 192, 0.75)',  'border' => 'rgba(75, 192, 192, 1)'],
+                ['bg' => 'rgba(153, 102, 255, 0.75)', 'border' => 'rgba(153, 102, 255, 1)'],
+                ['bg' => 'rgba(255, 159, 64, 0.75)',  'border' => 'rgba(255, 159, 64, 1)'],
+                ['bg' => 'rgba(99, 255, 132, 0.75)',  'border' => 'rgba(99, 255, 132, 1)'],
+                ['bg' => 'rgba(255, 99, 255, 0.75)',  'border' => 'rgba(255, 99, 255, 1)'],
+            ];
+            $p = $palettes[$index % count($palettes)];
 
             $incomeDatasets[] = [
                 'label' => $outlet->outlet_name,
                 'data' => $incomeData,
-                'backgroundColor' => $color,
-                'borderColor' => $borderColor,
+                'backgroundColor' => $p['bg'],
+                'borderColor' => $p['border'],
                 'borderWidth' => 1,
             ];
 
             $expenseDatasets[] = [
                 'label' => $outlet->outlet_name,
                 'data' => $expenseData,
-                'backgroundColor' => $color,
-                'borderColor' => $borderColor,
+                'borderColor' => $p['border'],
+                'backgroundColor' => $p['bg'],
                 'borderWidth' => 2,
                 'tension' => 0.3,
                 'pointRadius' => 4,
@@ -159,11 +166,13 @@ class FranchisorFinancialController extends Controller
             $outletReports = $reports->where('outlet_id', $outlet->outlet_id);
             $income = (float) $outletReports->sum('total_income');
             $expense = (float) $outletReports->sum('total_expense');
+            $items = (int) $outletReports->sum('total_items');
             $profit = $income - $expense;
 
             $outletTotals[] = [
                 'outlet_id' => $outlet->outlet_id,
                 'outlet_name' => $outlet->outlet_name,
+                'total_items' => $items,
                 'total_income' => $income,
                 'total_expense' => $expense,
                 'total_profit' => $profit,

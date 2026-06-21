@@ -202,6 +202,10 @@ Route::middleware('auth')->group(function () {
         ->name('franchisee.financial.create');
     Route::post('/dashboard/franchisee/financial-report', [\App\Http\Controllers\OutletFinancialReportController::class, 'store'])
         ->name('franchisee.financial.store');
+    Route::get('/dashboard/franchisee/financial-report/{report}/edit', [\App\Http\Controllers\OutletFinancialReportController::class, 'edit'])
+        ->name('franchisee.financial.edit');
+    Route::put('/dashboard/franchisee/financial-report/{report}', [\App\Http\Controllers\OutletFinancialReportController::class, 'update'])
+        ->name('franchisee.financial.update');
     Route::get('/dashboard/franchisee/outlets/{id}/products', [\App\Http\Controllers\OutletFinancialReportController::class, 'outletProducts'])
         ->name('franchisee.outlet.products');
 
