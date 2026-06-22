@@ -35,7 +35,13 @@ class Outlet extends Model
 
     public function produk()
     {
-        return $this->hasMany(Produk::class, 'outlet_id', 'outlet_id');
+        // Produk is linked to the same brand as the outlet, not directly to outlet_id.
+        return $this->hasMany(Produk::class, 'brand_id', 'brand_id');
+    }
+
+    public function products()
+    {
+        return $this->produk();
     }
 
     public function financialReports()
@@ -43,9 +49,28 @@ class Outlet extends Model
         return $this->hasMany(FinancialReport::class, 'outlet_id', 'outlet_id');
     }
 
+    public function materials()
+    {
+        return $this->hasMany(Material::class, 'outlet_id', 'outlet_id');
+    }
+
+    public function materialRequests()
+    {
+        return $this->hasMany(MaterialRequest::class, 'outlet_id', 'outlet_id');
+    }
+
     // Relasi ke transaksi harian
     public function transactions()
     {
         return $this->hasMany(\App\Models\Transaction::class, 'outlet_id', 'outlet_id');
+    }
+
+    public function hasDependentRecords()
+    {
+        return $this->products()->exists()
+            || $this->financialReports()->exists()
+            || $this->transactions()->exists()
+            || $this->materials()->exists()
+            || $this->materialRequests()->exists();
     }
 }

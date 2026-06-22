@@ -123,6 +123,15 @@ class OutletCrudController extends Controller
             ->with('success', 'Outlet berhasil ditambahkan.');
     }
 
+    public function show($id)
+    {
+        $this->authorizeAccess();
+
+        $outlet = $this->scopedOutletQuery()->findOrFail($id);
+
+        return view('manage.outlets.show', compact('outlet'));
+    }
+
     public function edit($id)
     {
         $this->authorizeAccess();
@@ -187,15 +196,16 @@ class OutletCrudController extends Controller
             ->with('success', 'Outlet berhasil diperbarui.');
     }
 
+
     public function destroy($id)
     {
         $this->authorizeAccess();
 
         $outlet = $this->scopedOutletQuery()->findOrFail($id);
 
-        if ($outlet->products()->exists()) {
+        if ($outlet->hasDependentRecords()) {
             return back()->withErrors([
-                'delete' => 'Outlet tidak dapat dihapus karena masih memiliki produk.',
+                'delete' => 'Outlet tidak dapat dihapus karena masih memiliki data terkait.',
             ]);
         }
 

@@ -231,8 +231,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('brands', BrandCrudController::class)
                 ->except(['show']);
 
-            Route::resource('outlets', OutletCrudController::class)
-                ->except(['show']);
+            Route::resource('outlets', OutletCrudController::class);
 
             Route::resource('produk', ProdukCrudController::class)
                 ->except(['show']);
