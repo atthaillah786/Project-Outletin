@@ -21,6 +21,7 @@ class FinancialReport extends Model
         'total_items',
         'total_income',
         'total_expense',
+        'product_details',
     ];
 
     protected $casts = [
@@ -28,6 +29,7 @@ class FinancialReport extends Model
         'total_items' => 'integer',
         'total_income' => 'decimal:2',
         'total_expense' => 'decimal:2',
+        'product_details' => 'array',
     ];
 
     public function outlet()

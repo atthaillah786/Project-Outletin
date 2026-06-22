@@ -202,17 +202,10 @@ class OutletCrudController extends Controller
         $this->authorizeAccess();
 
         $outlet = $this->scopedOutletQuery()->findOrFail($id);
-
-        if ($outlet->hasDependentRecords()) {
-            return back()->withErrors([
-                'delete' => 'Outlet tidak dapat dihapus karena masih memiliki data terkait.',
-            ]);
-        }
-
-        $outlet->delete();
+        $outlet->deleteWithDependencies();
 
         return redirect()
             ->route('manage.outlets.index')
-            ->with('success', 'Outlet berhasil dihapus.');
+            ->with('success', 'Outlet berhasil dihapus beserta data terkait.');
     }
 }

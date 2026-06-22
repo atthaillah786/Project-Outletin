@@ -31,7 +31,7 @@ class FranchiseeDashboardController extends Controller
             ->where('brand_id', $brand->brand_id)
             ->first();
 
-        if ($existing) {
+        if ($existing && $existing->status !== 'rejected') {
             return redirect()
                 ->route('franchisee.dashboard')
                 ->with('success', 'Anda sudah pernah mengajukan ke brand ini.');
@@ -64,6 +64,7 @@ class FranchiseeDashboardController extends Controller
             ->get();
 
         $outlets = Outlet::with('brand')
+            ->withCount(['financialReports', 'transactions', 'materials', 'materialRequests'])
             ->where('franchise_id', $user->user_id)
             ->orderBy('created_at', 'desc')
             ->get();

@@ -38,14 +38,19 @@
 </section>
 
 <section class="premium-card p-6 mb-8" data-reveal>
+    <div class="flex items-center justify-between mb-4">
+    <div>
     <h2 class="text-2xl font-extrabold text-ink mb-1">Grafik Keuangan Outlet Saya</h2>
     <p class="premium-muted mb-6">Pendapatan, pengeluaran, dan profit per bulan.</p>
+    </div>
+    <a href="{{ route('franchisee.financial.create') }}" class="premium-button">Input Laporan</a>
+    </div>
     <div class="flex items-center justify-between mb-4">
         <div class="w-full">
             <canvas id="financeChart" height="110"></canvas>
         </div>
         <div class="ml-6">
-            <a href="{{ route('franchisee.financial.create') }}" class="premium-button">Input Laporan</a>
+           
         </div>
     </div>
 </section>
@@ -142,7 +147,12 @@
                     <td class="py-4">{{ ucfirst($outlet->status) }}</td>
                     <td class="py-4">{{ $outlet->address ?? '-' }}</td>
                     <td class="py-4">
-                        <a href="{{ route('franchisee.financial.create') }}?outlet={{ $outlet->outlet_id }}" class="text-sm text-blue-600">Input Laporan</a>
+                        <div class="flex flex-col gap-2">
+                            <a href="{{ route('franchisee.financial.create') }}?outlet={{ $outlet->outlet_id }}" class="text-sm text-blue-600">Input Laporan</a>
+                            @if ($outlet->financial_reports_count || $outlet->transactions_count || $outlet->materials_count || $outlet->material_requests_count)
+                                <a href="{{ route('franchisee.outlet-delete-requests.create', $outlet->outlet_id) }}" class="text-sm text-red-600">Ajukan Hapus Outlet</a>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @empty

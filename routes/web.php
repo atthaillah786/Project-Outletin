@@ -184,6 +184,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/franchisee/brands/{id}/apply', [FranchiseeDashboardController::class, 'storeOutletApplication'])
         ->name('franchisee.outlets.store');
 
+    Route::get('/dashboard/franchisee/outlets/{outlet}/delete-request', [\App\Http\Controllers\OutletDeletionRequestController::class, 'create'])
+        ->name('franchisee.outlet-delete-requests.create');
+
+    Route::post('/dashboard/franchisee/outlets/{outlet}/delete-request', [\App\Http\Controllers\OutletDeletionRequestController::class, 'store'])
+        ->name('franchisee.outlet-delete-requests.store');
+
 
     /*
     |--------------------------------------------------------------------------
@@ -198,10 +204,14 @@ Route::middleware('auth')->group(function () {
         ->name('franchisee.produk.index');
 
     // Financial reports: franchisee (outlet) input
+    Route::get('/dashboard/franchisee/financial-report', [\App\Http\Controllers\OutletFinancialReportController::class, 'index'])
+        ->name('franchisee.financial.index');
     Route::get('/dashboard/franchisee/financial-report/create', [\App\Http\Controllers\OutletFinancialReportController::class, 'create'])
         ->name('franchisee.financial.create');
     Route::post('/dashboard/franchisee/financial-report', [\App\Http\Controllers\OutletFinancialReportController::class, 'store'])
         ->name('franchisee.financial.store');
+    Route::get('/dashboard/franchisee/financial-report/{report}', [\App\Http\Controllers\OutletFinancialReportController::class, 'show'])
+        ->name('franchisee.financial.show');
     Route::get('/dashboard/franchisee/financial-report/{report}/edit', [\App\Http\Controllers\OutletFinancialReportController::class, 'edit'])
         ->name('franchisee.financial.edit');
     Route::put('/dashboard/franchisee/financial-report/{report}', [\App\Http\Controllers\OutletFinancialReportController::class, 'update'])
@@ -212,6 +222,15 @@ Route::middleware('auth')->group(function () {
     // Outlet manager: weekly trend for a single outlet
     Route::get('/dashboard/franchisee/outlets/{outlet}/finance', [\App\Http\Controllers\OutletManagerController::class, 'weeklyTrend'])
         ->name('franchisee.outlet.finance');
+
+    Route::get('/dashboard/franchisor/outlet-delete-requests', [\App\Http\Controllers\OutletDeletionRequestController::class, 'index'])
+        ->name('franchisor.outlet-delete-requests.index');
+
+    Route::post('/dashboard/franchisor/outlet-delete-requests/{id}/approve', [\App\Http\Controllers\OutletDeletionRequestController::class, 'approve'])
+        ->name('franchisor.outlet-delete-requests.approve');
+
+    Route::post('/dashboard/franchisor/outlet-delete-requests/{id}/reject', [\App\Http\Controllers\OutletDeletionRequestController::class, 'reject'])
+        ->name('franchisor.outlet-delete-requests.reject');
 
 
     /*

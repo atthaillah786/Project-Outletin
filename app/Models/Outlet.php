@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Outlet extends Model
 {
@@ -67,10 +68,21 @@ class Outlet extends Model
 
     public function hasDependentRecords()
     {
-        return $this->products()->exists()
-            || $this->financialReports()->exists()
+        return $this->financialReports()->exists()
             || $this->transactions()->exists()
             || $this->materials()->exists()
             || $this->materialRequests()->exists();
+    }
+
+    public function deleteWithDependencies()
+    {
+        return DB::transaction(function () {
+            $this->financialReports()->delete();
+            $this->transactions()->delete();
+            $this->materials()->delete();
+            $this->materialRequests()->delete();
+
+            return parent::delete();
+        });
     }
 }

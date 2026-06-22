@@ -10,6 +10,25 @@ use Illuminate\Support\Facades\Auth;
 
 class OutletFinancialReportController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+
+        if (!$user || $user->role !== 'franchise') {
+            abort(403, 'Akses hanya untuk pemilik outlet.');
+        }
+
+        $outlets = Outlet::where('franchise_id', $user->user_id)->get();
+        
+        // Ambil semua laporan untuk outlet milik user
+        $reports = FinancialReport::whereIn('outlet_id', $outlets->pluck('outlet_id'))
+            ->with('outlet')
+            ->orderBy('report_date', 'desc')
+            ->paginate(15);
+
+        return view('financial.index', compact('reports', 'outlets'));
+    }
+
     public function create(Request $request)
     {
         $user = Auth::user();
@@ -85,6 +104,7 @@ class OutletFinancialReportController extends Controller
 
         $totalItems = 0;
         $totalIncome = 0;
+        $productDetails = [];
 
         foreach ($quantities as $produkId => $qty) {
             $qty = (int) $qty;
@@ -94,6 +114,14 @@ class OutletFinancialReportController extends Controller
             $totalItems += $qty;
             $price = (float) $produk->Price;
             $totalIncome += $price * $qty;
+            
+            $productDetails[] = [
+                'produk_id' => $produkId,
+                'produk_name' => $produk->produk_name,  
+                'price' => $price,
+                'quantity' => $qty,
+                'subtotal' => $price * $qty,
+            ];
         }
 
         $report = FinancialReport::create([
@@ -102,6 +130,7 @@ class OutletFinancialReportController extends Controller
             'total_items' => $totalItems,
             'total_income' => $totalIncome,
             'total_expense' => $data['total_expense'] ?? 0,
+            'product_details' => $productDetails,
         ]);
 
         return redirect()->route('franchisee.financial.create', [
@@ -162,6 +191,7 @@ class OutletFinancialReportController extends Controller
 
         $totalItems = 0;
         $totalIncome = 0;
+        $productDetails = [];
 
         foreach ($quantities as $produkId => $qty) {
             $qty = (int) $qty;
@@ -171,16 +201,47 @@ class OutletFinancialReportController extends Controller
             $totalItems += $qty;
             $price = (float) $produk->Price;
             $totalIncome += $price * $qty;
+            
+            $productDetails[] = [
+                'produk_id' => $produkId,
+                'produk_name' => $produk->produk_name,
+                'price' => $price,
+                'quantity' => $qty,
+                'subtotal' => $price * $qty,
+            ];
         }
 
         $report->update([
             'total_items' => $totalItems,
             'total_income' => $totalIncome,
             'total_expense' => $data['total_expense'] ?? 0,
+            'product_details' => $productDetails,
         ]);
 
         return redirect()->route('franchisee.financial.edit', [
             'report' => $report->financial_id,
         ])->with('success', 'Laporan keuangan harian berhasil diperbarui. Total item: ' . $totalItems);
+    }
+
+    /**
+     * Tampilkan detail laporan dengan breakdown produk terjual.
+     */
+    public function show($reportId)
+    {
+        $user = Auth::user();
+        if (!$user || $user->role !== 'franchise') {
+            abort(403, 'Akses hanya untuk pemilik outlet.');
+        }
+
+        $report = FinancialReport::findOrFail($reportId);
+        $outlet = Outlet::findOrFail($report->outlet_id);
+
+        if ($outlet->franchise_id !== $user->user_id) {
+            abort(403, 'Laporan tidak dimiliki oleh Anda.');
+        }
+
+        $productDetails = $report->product_details ?? [];
+        
+        return view('financial.show', compact('report', 'outlet', 'productDetails'));
     }
 }

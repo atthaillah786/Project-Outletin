@@ -33,6 +33,14 @@
     </div>
 
     <div class="premium-card premium-card-hover p-6" data-reveal>
+        <p class="text-taupe text-sm font-bold">Permintaan Hapus Outlet</p>
+        <div class="flex items-center justify-between gap-3">
+            <h2 class="text-3xl font-extrabold text-ink">{{ $deletionRequestCount }}</h2>
+            <a href="{{ route('franchisor.outlet-delete-requests.index') }}" class="premium-button">Lihat</a>
+        </div>
+    </div>
+
+    <div class="premium-card premium-card-hover p-6" data-reveal>
         <p class="text-taupe text-sm font-bold">Total Profit</p>
         <h2 class="text-2xl font-extrabold text-ink">
             Rp {{ number_format($totalProfit, 0, ',', '.') }}

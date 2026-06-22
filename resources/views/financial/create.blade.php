@@ -4,7 +4,7 @@
 
 @section('content')
 <section class="mb-8">
-    <h1 class="premium-section-title">
+    <h1 class="text-center text-5xl font-extrabold text-ink mb-1">
         {{ isset($existingReport) && $existingReport ? 'Edit Laporan Keuangan' : 'Input Laporan Keuangan Harian' }}
     </h1>
 </section>
@@ -86,12 +86,12 @@
 
                 <div class="mt-4">
                     <label for="total_expense" class="premium-label">Total Biaya (Expense)</label>
-                    <input id="total_expense" type="number" step="0.01" name="total_expense" class="premium-input" placeholder="0.00" value="{{ (isset($existingReport) && $existingReport) ? number_format($existingReport->total_expense, 2, '.', '') : '0.00' }}">
+                    <input id="total_expense" type="number" step="0.01" name="total_expense" class="premium-input" placeholder="0.00" value="{{ (isset($existingReport) && $existingReport) ? $existingReport->total_expense : '0' }}">
                 </div>
 
                 <div class="mt-3 p-4 bg-gray-50 rounded-2xl">
-                    <p class="text-sm text-ink">Total Items: <span id="total_items" class="font-bold">0</span></p>
-                    <p class="text-sm text-ink">Total Income: <span id="total_income" class="font-bold">Rp 0</span></p>
+                    <p class="text-sm text-ink">Total Items: <span id="total_items" class="font-bold">{{ isset($existingReport) && $existingReport ? $existingReport->total_items : 0 }}</span></p>
+                    <p class="text-sm text-ink">Total Income: <span id="total_income" class="font-bold">{{ isset($existingReport) && $existingReport ? 'Rp ' . number_format($existingReport->total_income, 0, ',', '.') : 'Rp 0' }}</span></p>
                 </div>
             </div>
 
@@ -112,6 +112,9 @@
 <script>
 const existingMode = {{ isset($existingReport) && $existingReport ? 'true' : 'false' }};
 const existingExpense = {{ (isset($existingReport) && $existingReport) ? number_format($existingReport->total_expense, 2, '.', '') : '0' }};
+const existingTotalItems = {{ isset($existingReport) && $existingReport ? $existingReport->total_items : 0 }};
+const existingTotalIncome = {{ isset($existingReport) && $existingReport ? $existingReport->total_income : 0 }};
+const existingProductDetails = @json($existingReport->product_details ?? []);
 
 function loadProductsForSelectedOutlet(){
     const select = document.getElementById('outlet_select');
@@ -126,10 +129,14 @@ function loadProductsForSelectedOutlet(){
             section.style.display = 'block';
             data.forEach(p => {
                 const tr = document.createElement('tr');
+                
+                const existingItem = existingProductDetails.find(item => item.produk_id == p.produk_id || item.produk_id == parseInt(p.produk_id));
+                const existingQty = existingItem ? existingItem.quantity : 0;
+                
                 tr.innerHTML = `
                     <td class="border border-linen/60 p-2">${p.produk_name}</td>
                     <td class="border border-linen/60 p-2">${parseFloat(p.Price).toFixed(2)}</td>
-                    <td class="border border-linen/60 p-2"><input type="number" min="0" name="quantities[${p.produk_id}]" value="0" class="w-24 premium-input qty-input" data-price="${p.Price}"></td>
+                    <td class="border border-linen/60 p-2"><input type="number" min="0" name="quantities[${p.produk_id}]" value="${existingQty}" class="w-24 premium-input qty-input" data-price="${p.Price}"></td>
                 `;
                 table.appendChild(tr);
             });
@@ -148,6 +155,8 @@ function loadProductsForSelectedOutlet(){
             }
 
             document.querySelectorAll('.qty-input').forEach(i => i.addEventListener('input', recalc));
+            
+            recalc();
         });
 }
 
@@ -159,6 +168,11 @@ document.addEventListener('DOMContentLoaded', function(){
         const sel = document.getElementById('outlet_select');
         sel.value = selected;
         loadProductsForSelectedOutlet();
+    }
+
+    if (existingMode) {
+        document.getElementById('total_items').innerText = existingTotalItems;
+        document.getElementById('total_income').innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(existingTotalIncome);
     }
 });
 </script>

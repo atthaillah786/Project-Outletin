@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Outlet;
 use App\Models\FinancialReport;
 use App\Models\FranchiseBrand;
+use App\Models\OutletDeletionRequest;
 use Illuminate\Support\Facades\Auth;
 
 class FranchisorDashboardController extends Controller
@@ -78,6 +79,10 @@ class FranchisorDashboardController extends Controller
         $totalExpense = array_sum($expenseData);
         $totalProfit = $totalIncome - $totalExpense;
 
+        $deletionRequestCount = OutletDeletionRequest::whereIn('brand_id', $brandIds)
+            ->where('status', 'pending')
+            ->count();
+
         return view('dashboard.franchisor', compact(
             'brands',
             'outlets',
@@ -89,7 +94,8 @@ class FranchisorDashboardController extends Controller
             'profitData',
             'totalIncome',
             'totalExpense',
-            'totalProfit'
+            'totalProfit',
+            'deletionRequestCount'
         ));
     }
 
@@ -184,10 +190,6 @@ class FranchisorDashboardController extends Controller
                 ]);
         }
 
-        $outlet->update([
-            'status' => 'rejected',
-        ]);
-
         $franchiseBrand = FranchiseBrand::where('franchise_id', $outlet->franchise_id)
             ->where('brand_id', $outlet->brand_id)
             ->first();
@@ -197,6 +199,8 @@ class FranchisorDashboardController extends Controller
                 'status' => 'rejected',
             ]);
         }
+
+        $outlet->delete();
 
         return redirect()
             ->route('franchisor.dashboard')
