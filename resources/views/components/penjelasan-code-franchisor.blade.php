@@ -749,49 +749,268 @@ new Chart(ctxExpense, {
    pointRadius = 4 → ada titik data
    tension = 0.3 → garis smooth
 
-{{-- KODE (tabel ranking) --}}
+{{-- ═══════════════════════════════════════════════════════════════════════════
+    FILE 9: resources/views/dashboard/franchisor_daily_transactions.blade.php (LANJUTAN)
+    ───────────────────────────────────────────────────────────────────────
+    Halaman "Grafik Harian" — Bagian: TABEL RANKING & MINI CARDS
+    ═══════════════════════════════════════════════════════════════════════════ --}}
+
+{{-- KODE (Tabel Ranking - dimulai dari baris 84) --}}
+<section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+→ FUNGSINYA untuk: MEMBUNGKUS seluruh bagian tabel ranking dalam satu section
+   bg-white → latar putih
+   p-6 → padding 24px di semua sisi
+   rounded-2xl → sudut melengkung besar (16px)
+   shadow-sm → bayangan kecil
+   border border-gray-100 → garis tepi abu-abu tipis
+
+{{-- KODE (baris 86-91) --}}
+<div class="flex items-end justify-between gap-4 mb-4">
+    <div>
+        <h2 class="text-xl font-bold">Rekap Periode (Ranking Income)</h2>
+        <p class="text-sm text-taupe">{{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }}</p>
+    </div>
+</div>
+→ FUNGSINYA untuk: JUDUL SEKSI "Rekap Periode (Ranking Income)"
+   flex items-end justify-between → item di kiri-kanan, rata bawah
+   <h2 class="text-xl font-bold"> → heading level 2, teks besar dan tebal
+   <p class="text-sm text-taupe"> → teks kecil warna taupe (#6b5850)
+   $startDate->format('d M Y') → format tanggal Bahasa Inggris: 14 Jun 2026
+   $endDate->format('d M Y') → contoh: 21 Jun 2026
+   → JADI: "14 Jun 2026 - 21 Jun 2026"
+
+{{-- KODE (baris 93-94) --}}
+<div class="overflow-x-auto">
+→ FUNGSINYA untuk: MEMBUNGKUS tabel agar bisa di-scroll horizontal
+   overflow-x-auto → jika tabel lebih lebar dari layar, muncul scrollbar horizontal
+   Penting untuk tampilan HP/tablet
+
+{{-- KODE (baris 94-136) --}}
 <table class="premium-table w-full min-w-[800px]">
-    <caption class="sr-only">Ranking outlet berdasarkan total income</caption>
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Outlet</th>
-            <th scope="col" class="text-right">Items</th>
-            <th scope="col" class="text-right">Income</th>
-            <th scope="col" class="text-right">Expense</th>
-            <th scope="col" class="text-right">Profit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse ($outletTotals as $idx => $outlet)
-            @php
-                $rank = $idx + 1;
-                $isTop = $rank <= 3;
-                $rowBg = $isTop ? 'bg-yellow-50' : '';
-            @endphp
-            <tr class="{{ $rowBg }}">
-                <td>{{ $rank }}</td>
-                <td>
-                    @if($isTop) <span class="badge bg-yellow-200">TOP</span> @endif
-                    {{ $outlet['outlet_name'] }}
-                </td>
-                <td class="text-right">{{ $outlet['total_items'] ?? 0 }}</td>
-                <td class="text-right">Rp {{ number_format($outlet['total_income'], 0, ',', '.') }}</td>
-                <td class="text-right">Rp {{ number_format($outlet['total_expense'], 0, ',', '.') }}</td>
-                <td class="text-right {{ $outlet['total_profit'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
-                    Rp {{ number_format($outlet['total_profit'], 0, ',', '.') }}
-                </td>
-            </tr>
-        @empty
-            <tr><td colspan="6">Belum ada data transaksi.</td></tr>
-        @endforelse
-    </tbody>
-</table>
-→ FUNGSINYA untuk: Tabel ranking outlet
-   Diurutkan dari income TERTINGGI ke TERENDAH
-   TOP 3 punya badge kuning + background kuning
-   $outlet['total_items'] ?? 0 → jika null, tampilkan 0
-   Profit hijau jika >= 0, merah jika < 0
+→ FUNGSINYA untuk: MEMULAI TABEL dengan class premium-table
+   premium-table → class kustom dari app.css (font, border, hover effect)
+   w-full → lebar 100% dari container
+   min-w-[800px] → lebar MINIMAL 800px (biar bisa di-scroll di HP)
+
+{{-- KODE (baris 95) --}}
+<caption class="sr-only">Ranking outlet berdasarkan total income periode {{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }}</caption>
+→ FUNGSINYA untuk: KETERANGAN TABEL (hanya untuk pembaca layar)
+   class="sr-only" → TIDAK TAMPIL VISUAL, hanya dibaca screen reader
+   Penting untuk aksesibilitas: pengguna tunanetra bisa tahu isi tabel
+   Isi caption: "Ranking outlet berdasarkan total income periode 14 Jun 2026 - 21 Jun 2026"
+
+{{-- KODE (baris 96-105) --}}
+<thead>
+    <tr>
+        <th scope="col" class="p-3">#</th>
+        <th scope="col" class="p-3">Outlet</th>
+        <th scope="col" class="p-3 text-right">Items</th>
+        <th scope="col" class="p-3 text-right">Income</th>
+        <th scope="col" class="p-3 text-right">Expense</th>
+        <th scope="col" class="p-3 text-right">Profit</th>
+    </tr>
+</thead>
+→ FUNGSINYA untuk: HEADER TABEL (baris pertama)
+   <thead> → bagian header tabel
+   <th scope="col"> → header KOLOM
+   scope="col" → aksesibilitas: memberitahu screen reader bahwa ini header kolom
+   p-3 → padding 12px
+   text-right → teks rata kanan (khusus kolom angka)
+   Kolom: # (peringkat), Outlet (nama), Items (barang terjual), Income, Expense, Profit
+
+{{-- KODE (baris 106) --}}
+<tbody>
+→ FUNGSINYA untuk: MEMULAI BAGIAN BADAN TABEL (isi data)
+
+{{-- KODE (baris 107-134) --}}
+@forelse ($outletTotals as $idx => $outlet)
+→ FUNGSINYA untuk: LOOP data outlet untuk ditampilkan sebagai baris tabel
+   $outletTotals → array dari controller (sudah diurutkan income tertinggi ke terendah)
+   $idx → index loop (0, 1, 2, 3, ...)
+   $outlet → array asosiatif: ['outlet_name' => ..., 'total_items' => ..., ...]
+   @forelse → sama seperti @foreach, tapi ada @empty jika data kosong
+   → Jika tidak ada data → tampilkan "Belum ada data transaksi"
+
+{{-- KODE (baris 108-112) --}}
+@php
+    $rank = $idx + 1;
+    $isTop = $rank <= 3;
+    $rowBg = $isTop ? 'bg-yellow-50' : '';
+@endphp
+→ FUNGSINYA untuk: HITUNG PERINGKAT dan style baris TOP 3
+   $rank = $idx + 1 → peringkat dimulai dari 1 (bukan 0)
+   $isTop = $rank <= 3 → TRUE jika peringkat 1, 2, atau 3
+   $rowBg = $isTop ? 'bg-yellow-50' : '' → baris TOP 3 dapat background kuning
+   bg-yellow-50 → kuning sangat muda (#fffbeb)
+   → JADI: 3 outlet teratas punya sorotan kuning
+
+{{-- KODE (baris 113) --}}
+<tr class="border-b border-linen/40 {{ $rowBg }}">
+→ FUNGSINYA untuk: MEMULAI BARIS TABEL
+   border-b border-linen/40 → garis bawah tipis warna linen 40% opacity
+   {{ $rowBg }} → tambah class bg-yellow-50 jika outlet TOP 3
+
+{{-- KODE (baris 114) --}}
+<td class="p-3 font-semibold text-ink">{{ $rank }}</td>
+→ FUNGSINYA untuk: KOLOM PERINGKAT (#)
+   font-semibold → teks setengah tebal
+   text-ink → warna #201717 (hitam pekat)
+   {{ $rank }} → nomor peringkat: 1, 2, 3, ...
+
+{{-- KODE (baris 115-121) --}}
+<td class="p-3">
+    <div class="flex items-center gap-2">
+        @if($isTop)
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-yellow-200 text-yellow-900">TOP</span>
+        @endif
+        <span class="font-semibold text-ink">{{ $outlet['outlet_name'] }}</span>
+    </div>
+</td>
+→ FUNGSINYA untuk: KOLOM NAMA OUTLET + BADGE "TOP"
+   <div class="flex items-center gap-2"> → flexbox: item sejajar horizontal, jarak 8px
+   @if($isTop) → hanya tampilkan badge untuk peringkat 1-3
+      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-yellow-200 text-yellow-900">TOP</span>
+      → FUNGSINYA untuk: BADGE "TOP" — label kuning untuk 3 outlet teratas
+         inline-flex → display flex inline (agar ukuran sesuai konten)
+         items-center → item di tengah vertikal
+         px-2 → padding kiri-kanan 8px
+         py-1 → padding atas-bawah 4px
+         rounded-full → sudut melengkung penuh (bentuk pil)
+         text-xs → ukuran font sangat kecil (12px)
+         font-bold → teks tebal
+         bg-yellow-200 → latar kuning (#fde68a)
+         text-yellow-900 → teks kuning gelap (#78350f)
+         "TOP" → teks di dalam badge
+         → JADI: badge kuning kecil bertuliskan "TOP"
+   @endif → penutup if
+   <span class="font-semibold text-ink">{{ $outlet['outlet_name'] }}</span>
+      → FUNGSINYA untuk: NAMA OUTLET — teks setengah tebal warna hitam
+      $outlet['outlet_name'] → nama outlet dari database (misal: "Outlet Cabang 1")
+   </div> → penutup flex
+
+{{-- KODE (baris 123) --}}
+<td class="p-3 text-right font-semibold">{{ $outlet['total_items'] ?? 0 }}</td>
+→ FUNGSINYA untuk: KOLOM ITEMS (jumlah barang terjual)
+   text-right → rata kanan (karena angka)
+   font-semibold → setengah tebal
+   $outlet['total_items'] ?? 0 → jika null/tidak ada, tampilkan 0
+   → JADI: menampilkan total barang terjual outlet selama periode
+
+{{-- KODE (baris 124) --}}
+<td class="p-3 font-semibold text-right text-green-700">Rp {{ number_format($outlet['total_income'], 0, ',', '.') }}</td>
+→ FUNGSINYA untuk: KOLOM INCOME (total pendapatan) — warna HIJAU
+   text-green-700 → teks hijau tua (#15803d)
+   font-semibold → setengah tebal
+   text-right → rata kanan
+   number_format($outlet['total_income'], 0, ',', '.')
+      → FUNGSINYA untuk: FORMAT ANGKA JADI RUPIAH
+         Parameter: (angka_yang_akan_diformat, jumlah_desimal, pemisah_desimal, pemisah_ribuan)
+         0 → tanpa desimal (misal 500000 → "500.000", bukan "500.000,00")
+         ',' → pemisah desimal (tidak dipakai karena 0 desimal)
+         '.' → pemisah ribuan (jadi titik: 1.000.000)
+         → CONTOH: 658000 → "Rp 658.000"
+                   1200000 → "Rp 1.200.000"
+   → JADI: menampilkan pendapatan outlet dengan format Rupiah, teks hijau
+
+{{-- KODE (baris 125) --}}
+<td class="p-3 text-right">Rp {{ number_format($outlet['total_expense'], 0, ',', '.') }}</td>
+→ FUNGSINYA untuk: KOLOM EXPENSE (total pengeluaran)
+   text-right → rata kanan
+   number_format(...) → format Rupiah (sama seperti di atas)
+   → JADI: menampilkan total pengeluaran outlet
+
+{{-- KODE (baris 126-128) --}}
+<td class="p-3 font-semibold text-right {{ $outlet['total_profit'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
+    Rp {{ number_format($outlet['total_profit'], 0, ',', '.') }}
+</td>
+→ FUNGSINYA untuk: KOLOM PROFIT (laba = income - expense)
+   font-semibold → setengah tebal
+   text-right → rata kanan
+   {{ $outlet['total_profit'] >= 0 ? 'text-green-600' : 'text-red-600' }}
+      → FUNGSINYA untuk: WARNA BERSYARAT
+         Jika profit >= 0 (untung/laba) → HIJAU (text-green-600)
+         Jika profit < 0 (rugi) → MERAH (text-red-600)
+         → JADI: otomatis menyesuaikan warna
+   number_format($outlet['total_profit'], 0, ',', '.') → format Rupiah
+   → CONTOH: untung 450.000 → teks hijau "Rp 450.000"
+             rugi 50.000 → teks merah "Rp -50.000"
+
+{{-- KODE (baris 113-129) --}}
+</tr>
+→ FUNGSINYA untuk: PENUTUP baris tabel
+
+{{-- KODE (baris 130-133) --}}
+@empty
+    <tr>
+        <td colspan="6" class="p-6 text-center text-taupe">Belum ada data transaksi pada periode ini.</td>
+    </tr>
+→ FUNGSINYA untuk: PESAN jika TIDAK ADA DATA SAMA SEKALI
+   @empty → dijalankan jika $outletTotals kosong
+   colspan="6" → gabung 6 kolom jadi 1 (karena semua kolom kosong)
+   text-center → teks di tengah
+   text-taupe → warna abu-abu (#6b5850)
+   Pesan: "Belum ada data transaksi pada periode ini."
+
+{{-- KODE (baris 134-137) --}}
+@endforelse
+            </tbody>
+        </table>
+    </div>
+→ FUNGSINYA untuk: PENUTUP
+   @endforelse → penutup @forelse
+   </tbody> → penutup badan tabel
+   </table> → penutup tabel
+   </div> → penutup overflow-x-auto
+
+{{-- ═══════════════════════════════════════════════════════════════════════════
+    FILE 9 LANJUTAN: MINI CARDS per outlet (baris 139-154)
+    ═══════════════════════════════════════════════════════════════════════════ --}}
+
+{{-- KODE (baris 139-154) --}}
+{{-- Mini cards per outlet --}}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+→ FUNGSINYA untuk: GRID KARTU RINGKASAN per outlet
+   grid → CSS Grid layout
+   grid-cols-1 → 1 kolom di layar HP
+   md:grid-cols-2 → 2 kolom di layar tablet (768px+)
+   lg:grid-cols-3 → 3 kolom di layar desktop (1024px+)
+   gap-4 → jarak antar kartu 16px
+   mt-8 → margin atas 32px
+
+{{-- KODE (baris 141-153) --}}
+@foreach ($outletTotals as $outlet)
+    <div class="rounded-3xl bg-white p-5 shadow-sm border border-gray-100">
+        <p class="text-sm font-semibold text-ink">{{ $outlet['outlet_name'] }}</p>
+        <p class="mt-3 text-xl font-bold">Rp {{ number_format($outlet['total_income'], 0, ',', '.') }}</p>
+        <div class="mt-1 text-xs text-taupe space-y-0.5">
+            <p>Items terjual: <span class="font-semibold text-ink">{{ $outlet['total_items'] ?? 0 }}</span></p>
+            <p>
+                Expense: Rp {{ number_format($outlet['total_expense'], 0, ',', '.') }} |
+                Profit: <span class="font-semibold {{ $outlet['total_profit'] >= 0 ? 'text-green-600' : 'text-red-600' }}">Rp {{ number_format($outlet['total_profit'], 0, ',', '.') }}</span>
+            </p>
+        </div>
+    </div>
+@endforeach
+→ FUNGSINYA untuk: KARTU RINGKASAN per outlet (alternatif tampilan selain tabel)
+   @foreach ($outletTotals as $outlet) → loop setiap outlet
+   <div class="rounded-3xl bg-white p-5 shadow-sm border border-gray-100">
+      → KARTU: sudut lengkung besar, latar putih, padding 20px, bayangan tipis, border abu-abu
+   <p class="text-sm font-semibold text-ink">{{ $outlet['outlet_name'] }}</p>
+      → NAMA OUTLET: font kecil, setengah tebal, hitam
+   <p class="mt-3 text-xl font-bold">Rp {{ number_format($outlet['total_income'], 0, ',', '.') }}</p>
+      → TOTAL INCOME: font besar (xl), tebal, format Rupiah
+   <div class="mt-1 text-xs text-taupe space-y-0.5">
+      → DETAIL: font kecil, warna taupe, jarak antar baris 2px
+      "Items terjual: ..."
+         → total_items (atau 0 jika null)
+      "Expense: ... | Profit: ..."
+         → expense + profit (hijau/merah bersyarat)
+   </div>
+</div>
+
+{{-- KODE (baris 155) --}}
+</section>
+→ FUNGSINYA untuk: PENUTUP section tabel ranking (dari baris 84)
 
 
 
